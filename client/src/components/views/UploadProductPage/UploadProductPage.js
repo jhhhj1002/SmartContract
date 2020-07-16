@@ -13,7 +13,8 @@ const Continents = [
     { key: 4, value: "North America" },
     { key: 5, value: "South America" },
     { key: 6, value: "Australia" },
-    { key: 7, value: "Antarctica" }
+    { key: 7, value: "Antarctica" },
+    { key: 8, value: "Korea" }
 ]
 
 function UploadProductPage(props) {
