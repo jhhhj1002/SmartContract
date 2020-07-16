@@ -1,6 +1,8 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, Component } from 'react';
 import { Route, Switch } from "react-router-dom";
 import Auth from "../hoc/auth";
+import Web3 from 'web3';
+import './App.css';
 // pages for this product
 import LandingPage from "./views/LandingPage/LandingPage.js";
 import LoginPage from "./views/LoginPage/LoginPage.js";
@@ -12,8 +14,38 @@ import DetailProductPage from './views/DetailProductPage/DetailProductPage';
 import CartPage from './views/CartPage/CartPage';
 import HistoryPage from './views/HistoryPage/HistoryPage';
 
-function App() {
-  return (
+class App extends Component{
+  componentDidMount = async () => {
+    await this.initWeb3();
+  }
+  initWeb3 = async () => {
+    if (window.ethereum) {
+      console.log('recent mode');
+      this.web3 = new Web3(window.ethereum);
+      try {
+          // Request account access if needed
+          await window.ethereum.enable();
+          // Acccounts now exposed
+          //this.eth.sendTransaction({/* ... */});
+      } catch (error) {
+          // User denied account access...
+          console.log('user denied account access error: ' + error);
+      }
+  }
+   // Legacy dapp browsers...
+    else if (window.web3) {
+     console.log('legacy mode');
+       this.web3 = new Web3(window.web3.currentProvider);
+       // Acccounts always exposed
+        //web3.eth.sendTransaction({/* ... */});
+   }
+    // Non-dapp browsers...
+    else {
+     console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+   }
+   
+ }
+ render(){ return (
     <Suspense fallback={(<div>Loading...</div>)}>
       <NavBar />
       <div style={{ paddingTop: '75px', minHeight: 'calc(100vh - 80px)' }}>
@@ -31,6 +63,7 @@ function App() {
       <Footer />
     </Suspense>
   );
+}
 }
 
 export default App;
