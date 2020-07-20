@@ -10,8 +10,8 @@ const Continents = [
     { key: 1, value: "Music" },
     { key: 2, value: "Image" },
     { key: 3, value: "PPT Templates" },
-    { key: 4, value: "SW" },
-    { key: 5, value: "Literature" },
+    { key: 4, value: "Literature" },
+    { key: 5, value: "SW" },
     { key: 6, value: "Etc" }
 ]
 
