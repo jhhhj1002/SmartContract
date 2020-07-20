@@ -12,9 +12,12 @@ function FileUpload(props) {
         const config = {
             header: { 'content-type': 'multipart/form-data' }
         }
+
         formData.append("file", files[0])
         //save the Image we chose inside the Node Server 
-        Axios.post('/api/product/uploadImage', formData, config)
+
+        Axios.post('/api/product/uploadImage', formData, config) // formData : 지금 업로드 하는 file에 대한 정보
+
             .then(response => {
                 if (response.data.success) {
 
