@@ -6,11 +6,11 @@ const multer = require('multer');
 const { auth } = require("../middleware/auth");
 
 var storage = multer.diskStorage({
-    destination: (req, file, cb) => {
+    destination: (req, file, cb) => { // 파일이 어디에 저장이 되는지
         cb(null, 'uploads/')
     },
     filename: (req, file, cb) => {
-        cb(null, `${Date.now()}_${file.originalname}`)
+        cb(null, `${Date.now()}_${file.originalname}`) //파일을 어떤이름으로 저장할 것인지
     },
     fileFilter: (req, file, cb) => {
         const ext = path.extname(file.originalname)
@@ -28,10 +28,11 @@ var upload = multer({ storage: storage }).single("file")
 //             Product
 //=================================
 
-router.post("/uploadImage", auth, (req, res) => {
-
+router.post("/uploadImage", auth, (req, res) => { // 가져온 이미지 저장하는 부분
+    
     upload(req, res, err => {
         if (err) {
+            console.log(err)
             return res.json({ success: false, err })
         }
         return res.json({ success: true, image: res.req.file.path, fileName: res.req.file.filename })

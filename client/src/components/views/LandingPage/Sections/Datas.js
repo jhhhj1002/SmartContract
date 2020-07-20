@@ -37,31 +37,27 @@ const price = [
 const continents = [
     {
         "_id": 1,
-        "name": "Africa"
+        "name": "Music"
     },
     {
         "_id": 2,
-        "name": "Europe"
+        "name": "Image"
     },
     {
         "_id": 3,
-        "name": "Asia"
+        "name": "PPT Templates"
     },
     {
         "_id": 4,
-        "name": "North America"
+        "name": "Literature"
     },
     {
         "_id": 5,
-        "name": "South America"
+        "name": "SW"
     },
     {
         "_id": 6,
-        "name": "Australia"
-    },
-    {
-        "_id": 7,
-        "name": "Antarctica"
+        "name": "Etc"
     }
 ]
 
