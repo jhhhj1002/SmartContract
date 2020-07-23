@@ -7,9 +7,11 @@ import {
     ADD_TO_CART_USER,
     GET_CART_ITEMS_USER,
     REMOVE_CART_ITEM_USER,
-    ON_SUCCESS_BUY_USER
+    ON_SUCCESS_BUY_USER,
+    ADD_TO_UPLOAD
 } from './types';
 import { USER_SERVER } from '../components/Config.js';
+import Title from 'antd/lib/skeleton/Title';
 
 export function registerUser(dataToSubmit) {
     const request = axios.post(`${USER_SERVER}/register`, dataToSubmit)
@@ -125,6 +127,16 @@ export function onSuccessBuy(data) {
 }
 
 
+export function addToUpload(id) {
+    let body ={
+        productId: id
+    }
+    const request = axios.post(`${USER_SERVER}/addtoupload`, body)
+        .then(response => response.data);
 
-
+    return {
+        type: ADD_TO_UPLOAD,
+        payload: request
+    }
+}
 
