@@ -22,7 +22,8 @@ router.get("/auth", auth, (req, res) => {
         role: req.user.role,
         image: req.user.image,
         cart: req.user.cart,
-        history: req.user.history
+        history: req.user.history,
+        upload: req.user.upload //내가추가
     });
 });
 
@@ -71,6 +72,34 @@ router.get("/logout", auth, (req, res) => {
             success: true
         });
     });
+});
+
+
+router.post("/updateUserUploadInfo", auth, (req, res) => {
+    console.log(req.user._id);
+    console.log(req.body.productId);
+
+    User.findOne({ _id: req.user._id }, (err, userInfo) => {
+
+            User.findOneAndUpdate(
+                { _id: req.user._id },
+                {
+                    $push: {
+                        upload: {
+                            id: req.body.productId,
+                            quantity: 1,
+                            date: Date.now()
+                        }
+                    }
+                },
+                { new: true },
+                (err, userInfo) => {
+                    if (err) return res.json({ success: false, err });
+                    res.status(200).json({success:true})
+                }
+            )
+     })
+
 });
 
 
@@ -149,7 +178,7 @@ router.get('/removeFromCart', auth, (req, res) => {
 })
 
 
-router.get('/userCartInfo', auth, (req, res) => {
+router.get('/userCartInfo', auth, (req, res) => { //이거 마이패지이에사용예정
     User.findOne(
         { _id: req.user._id },
         (err, userInfo) => {
