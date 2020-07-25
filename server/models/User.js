@@ -34,6 +34,10 @@ const userSchema = mongoose.Schema({
         type: Array,
         default: []
     },
+    upload: {
+        type: Array,
+        default: []
+    },
     image: String,
     token: {
         type: String,
