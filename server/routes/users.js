@@ -75,7 +75,7 @@ router.get("/logout", auth, (req, res) => {
 });
 
 
-router.post("/updateUserUploadInfo", auth, (req, res) => {
+router.post("/updateUserUploadInfo", auth, (req, res) => { // Product upload시 Mongo DB User의 upload에 추가
     console.log(req.user._id);
     console.log(req.body.productId);
 
@@ -178,7 +178,7 @@ router.get('/removeFromCart', auth, (req, res) => {
 })
 
 
-router.get('/userCartInfo', auth, (req, res) => { //이거 마이패지이에사용예정
+router.get('/userCartInfo', auth, (req, res) => { 
     User.findOne(
         { _id: req.user._id },
         (err, userInfo) => {
@@ -193,6 +193,34 @@ router.get('/userCartInfo', auth, (req, res) => { //이거 마이패지이에사
                 .exec((err, cartDetail) => {
                     if (err) return res.status(400).send(err);
                     return res.status(200).json({ success: true, cartDetail, cart })
+                })
+
+        }
+    )
+})
+
+
+
+router.get('/userUploadInfo', auth, (req, res) => { // User의 upload목록 Mypage에 가지고옴
+    let order = req.body.order ? req.body.order : "desc";
+    let sortBy = req.body.sortBy ? req.body.sortBy : "_id";
+
+    User.findOne(
+        { _id: req.user._id },
+        (err, userInfo) => {
+            let upload = userInfo.upload;
+            let array = upload.map(item => {
+                console.log(item.id)
+                return item.id
+            })
+
+
+            Product.find({ '_id': { $in: array } })
+                .populate('writer')
+                .sort([[sortBy, order]])
+                .exec((err, uploadDetail) => {
+                    if (err) return res.status(400).send(err);
+                    return res.status(200).json({ success: true, products : uploadDetail, postSize: uploadDetail.length })
                 })
 
         }
