@@ -54,10 +54,6 @@ function RightMenu(props) {
           </Badge>
         </Menu.Item>
 
-        <Menu.Item key="mypage">
-          <a href="/mypage">Mypage</a>
-        </Menu.Item>
-
         <Menu.Item key="logout">
           <a onClick={logoutHandler}>Logout</a>
         </Menu.Item>

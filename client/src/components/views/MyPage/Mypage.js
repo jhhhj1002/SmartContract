@@ -1,22 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import Axios from 'axios';
-import { Icon, Col, Card, Row } from 'antd';
+import { useDispatch } from 'react-redux';
+import { Icon, Col, Card, Row, Button } from 'antd';
+import { EditOutlined, DeleteOutlined  } from '@ant-design/icons';
 import ImageSlider from '../../utils/ImageSlider';
 import {sort} from './RadioBoxForSorting';
 import RadioBox from './RadioBoxForSorting';
+import {
+    deleteItem
+} from '../../../_actions/user_actions';
 // import RadioBox from '../LandingPage/Sections/RadioBox';
 
 // 내가 업로드한 내역 ==> Done
 // Product 정렬 + Filters, continents, Skip, Limit 필요없는 것들 수정 
-// Product 수정 버튼 추가
+// Product 수정 버튼 추가 - ant-design/icons 활용
+// Product 삭제 버튼 추가 - ant-design/icons 활용
+//  Product 삭제 동작 구현 - deleteHandler에서 productId는 제대로 받아오지만 deleteItem메소드로가면 전달이 안되는것 같음
 // Product 수정 페이지 만들기
-// + 내가 구매한 내역 -> History 연결 ?
+// + 내가 구매한 내역 -> History 연결 ? -> 이건위에 바로 history잇으니까 없어도 될듯해
 
 
 const { Meta } = Card;
 
 function Mypage(props) {
-
+    const dispatch = useDispatch();
     const [Products, setProducts] = useState([])
     const [Skip, setSkip] = useState(0)
     const [Limit, setLimit] = useState(8)
@@ -67,6 +74,14 @@ function Mypage(props) {
         setSkip(skip)
     }
 
+    /* 상품 삭제 메소드 */
+    const deleteHandler= (productId) => {
+        console.log("productid",productId)
+        dispatch(deleteItem(productId))
+            .then(response => response.data)
+    }
+
+
     const renderCards = Products.map((product, index) => {
 
         return <Col lg={6} md={8} xs={24}>
@@ -78,6 +93,16 @@ function Mypage(props) {
                     title={product.title}
                     description={`$${product.price}`}
                 />
+                <Button>
+                    <EditOutlined />
+                    edit
+                    <a href={`/product/${product._id}`} />
+                </Button>
+
+                <Button onClick={deleteHandler(product._id)}>
+                    <DeleteOutlined />
+                    delete
+                </Button> 
             </Card>
         </Col>
     })

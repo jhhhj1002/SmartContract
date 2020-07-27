@@ -26,6 +26,10 @@ const userSchema = mongoose.Schema({
         type: Number,
         default: 0
     },
+    wallet: {
+        type: String,
+        default: '0x00'
+    },
     cart: {
         type: Array,
         default: []
@@ -35,10 +39,6 @@ const userSchema = mongoose.Schema({
         default: []
     },
     history: {
-        type: Array,
-        default: []
-    },
-    upload: {
         type: Array,
         default: []
     },

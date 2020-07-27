@@ -23,7 +23,8 @@ router.get("/auth", auth, (req, res) => {
         image: req.user.image,
         cart: req.user.cart,
         history: req.user.history,
-        upload: req.user.upload //내가추가
+        upload: req.user.upload,
+        wallet: req.user.wallet
     });
 });
 
@@ -101,7 +102,6 @@ router.post("/updateUserUploadInfo", auth, (req, res) => { // Product upload시 
      })
 
 });
-
 
 router.get('/addToCart', auth, (req, res) => {
 

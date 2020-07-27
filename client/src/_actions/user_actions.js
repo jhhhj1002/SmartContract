@@ -8,7 +8,8 @@ import {
     GET_CART_ITEMS_USER,
     REMOVE_CART_ITEM_USER,
     ON_SUCCESS_BUY_USER,
-    ADD_TO_UPLOAD
+    ADD_TO_UPLOAD,
+    DELETE_ITEM
 } from './types';
 import { USER_SERVER } from '../components/Config.js';
 import Title from 'antd/lib/skeleton/Title';
@@ -91,7 +92,17 @@ export function getCartItems(cartItems, userCart) {
     }
 }
 
+/* 마이페이지에서 상품 삭제 */
+export function deleteItem(id) {
+    console.log("id=", id._id)
+    const request = axios.get(`api/product/products_by_id?_id=${id._id}`)
+        .then(response => response.data)
 
+    return {
+        type: DELETE_ITEM,
+        payload: request
+    }
+}
 
 
 export function removeCartItem(id) {
