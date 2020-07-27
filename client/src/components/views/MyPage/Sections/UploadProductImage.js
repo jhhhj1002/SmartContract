@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import ImageGallery from 'react-image-gallery';
 
-function ProductImage(props) {
+function UploadProductImage(props) {
     const [Images, setImages] = useState([])
 
     useEffect(() => {
@@ -25,4 +25,4 @@ function ProductImage(props) {
     )
 }
 
-export default ProductImage
+export default UploadProductImage

@@ -106,6 +106,15 @@ router.post("/getProducts", (req, res) => {
 
 });
 
+/*mypage item 리무브*/
+router.get('/deleteItem', auth, (req, res) => {
+    Product.findByIdAndRemove({_id : req.product.productId}), (err, doc) => {
+        if (err) return res.json({ success: false, err });
+        return res.status(200).send({
+            success: true
+        })
+    }
+});
 
 //?id=${productId}&type=single
 //id=12121212,121212,1212121   type=array 

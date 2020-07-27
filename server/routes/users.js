@@ -23,7 +23,8 @@ router.get("/auth", auth, (req, res) => {
         image: req.user.image,
         cart: req.user.cart,
         history: req.user.history,
-        upload: req.user.upload //내가추가
+        upload: req.user.upload,
+        wallet: req.user.wallet
     });
 });
 
@@ -101,7 +102,6 @@ router.post("/updateUserUploadInfo", auth, (req, res) => { // Product upload시 
      })
 
 });
-
 
 router.get('/addToCart', auth, (req, res) => {
 
@@ -320,5 +320,21 @@ router.get('/getHistory', auth, (req, res) => {
     )
 })
 
+router.post('/addtoupload', auth, (req, res) => {
+    User.findOne({_id: req.user._id}, (err, userInfo)=>{
+        User.findByIdAndUpdate({ _id:req.user._id},{
+            $push: {
+                upload: {
+                    id: req.body.productId
+                }
+            }
+        },
+            {new:true},
+            (err, userInfo) => {
+                if(err) return res.status(400).json({success : false, err})
+                res.status(200).send(userInfo.upload)
+            })
+    })
+})
 
 module.exports = router;
