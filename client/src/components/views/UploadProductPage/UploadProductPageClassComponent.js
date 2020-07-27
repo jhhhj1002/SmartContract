@@ -9,13 +9,12 @@ const { Title } = Typography;
 const { TextArea } = Input;
 
 const Continents = [
-    { key: 1, value: "Africa" },
-    { key: 2, value: "Europe" },
-    { key: 3, value: "Asia" },
-    { key: 4, value: "North America" },
-    { key: 5, value: "South America" },
-    { key: 6, value: "Australia" },
-    { key: 7, value: "Antarctica" }
+    { key: 1, value: "Music" },
+    { key: 2, value: "Image" },
+    { key: 3, value: "PPT Templates" },
+    { key: 4, value: "Literature" },
+    { key: 5, value: "SW" },
+    { key: 6, value: "Etc" }
 ]
 const dispatch = useDispatch();
 const uploadclickHandler = () =>{
@@ -81,6 +80,7 @@ export class UploadProductPage extends Component {
                     alert('Failed to upload video')
                 }
             })
+
     }
 
     updateFiles = (newImages) => {

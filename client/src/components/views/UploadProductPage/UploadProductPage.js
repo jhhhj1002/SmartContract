@@ -63,16 +63,25 @@ function UploadProductPage(props) {
             continents: ContinentValue,
         }
 
+
+
         Axios.post('/api/product/uploadProduct', variables)
             .then(response => {
                 if (response.data.success) {
-                    alert('Product Successfully Uploaded')
-                    props.history.push('/')
+                    Axios.post('/api/users/updateUserUploadInfo', {"productId":response.data.productId}) //내가추가
+                    .then(response => {
+                        if (response.data.success) {
+                                alert('Product Successfully Uploaded')
+                                    props.history.push('/')
+                                } else {
+                                    alert('Failed to upload Product')
+                                }
+                            })
                 } else {
                     alert('Failed to upload Product')
                 }
             })
-
+            
     }
 
     return (
