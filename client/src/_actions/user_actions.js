@@ -12,7 +12,6 @@ import {
     DELETE_ITEM
 } from './types';
 import { USER_SERVER } from '../components/Config.js';
-import Title from 'antd/lib/skeleton/Title';
 
 export function registerUser(dataToSubmit) {
     const request = axios.post(`${USER_SERVER}/register`, dataToSubmit)
@@ -92,12 +91,11 @@ export function getCartItems(cartItems, userCart) {
     }
 }
 
-/* 마이페이지에서 상품 삭제 */
+/* Mypage.js deleteHandler -> 상품 삭제 */
 export function deleteItem(id) {
-    console.log("id=", id._id)
-    const request = axios.get(`api/product/products_by_id?_id=${id._id}`)
+    const request = axios.get(`/api/product/deleteItem?id=${id}`)
         .then(response => response.data)
-
+    console.log("id=", id)
     return {
         type: DELETE_ITEM,
         payload: request

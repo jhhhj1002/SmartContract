@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { User } = require("../models/User");
 const { Product } = require("../models/Product");
 const multer = require('multer');
 
@@ -29,7 +30,7 @@ var upload = multer({ storage: storage }).single("file")
 //=================================
 
 router.post("/uploadImage", auth, (req, res) => { // 가져온 이미지 저장하는 부분
-    
+
     upload(req, res, err => {
         if (err) {
             console.log(err)
@@ -49,7 +50,7 @@ router.post("/uploadProduct", auth, (req, res) => {
     product.save((err) => {
         console.log("product의 id = " + product._id)
         if (err) return res.status(400).json({ success: false, err })
-        return res.status(200).json({ success: true , productId : product._id})
+        return res.status(200).json({ success: true, productId: product._id })
     })
 
 });
@@ -79,7 +80,7 @@ router.post("/getProducts", (req, res) => {
         }
     }
 
-    console.log(findArgs)
+    console.log("mypage 상품들", findArgs)
 
     if (term) {
         Product.find(findArgs)
@@ -106,14 +107,38 @@ router.post("/getProducts", (req, res) => {
 
 });
 
-/*mypage item 리무브*/
-router.get('/deleteItem', auth, (req, res) => {
-    Product.findByIdAndRemove({_id : req.product.productId}), (err, doc) => {
-        if (err) return res.json({ success: false, err });
-        return res.status(200).send({
-            success: true
+/*Mypage.js item 리무브*/
+router.get("/deleteItem", auth, (req, res) => {
+    console.log("/deleteItem req.query", req.query)
+    let productId = req.query.id
+
+    Product.deleteOne({ _id: productId }).then(function () {
+        console.log("Data deleted"); // Success 
+    }).catch(function (error) {
+        console.log(error); // Failure 
+    })
+    //user의 upload의 상품정보 & cart 상품정보 삭제
+    ,User.findOne({ _id: productId }, (err, userInfo) => {
+        console.log("upload삭제하기위해 필요한 userid", req.user._id)
+        User.findOneAndUpdate(
+            { _id: req.user._id },
+            {
+                $pull: {
+                    upload: {
+                        id: productId
+                    },
+                    cart: {
+                        id: productId
+                    }
+                }
+            },
+            { new: true }
+        ).then(function () {
+            console.log("upload element deleted");
+        }).catch(function (error) {
+            console.log(error);
         })
-    }
+    })
 });
 
 //?id=${productId}&type=single
@@ -122,7 +147,7 @@ router.get("/products_by_id", (req, res) => {
     let type = req.query.type
     let productIds = req.query.id
 
-    console.log("req.query.id", req.query.id)
+    console.log("/products_by_id: req.query.id", req.query.id)
 
     if (type === "array") {
         let ids = req.query.id.split(',');
@@ -131,9 +156,6 @@ router.get("/products_by_id", (req, res) => {
             return item
         })
     }
-
-    console.log("productIds", productIds)
-
 
     //we need to find the product information that belong to product Id 
     Product.find({ '_id': { $in: productIds } })
