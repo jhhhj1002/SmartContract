@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import Axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { Icon, Col, Card, Row, Button } from 'antd';
-import { EditOutlined, DeleteOutlined  } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import ImageSlider from '../../utils/ImageSlider';
-import {sort} from './RadioBoxForSorting';
+import { sort } from './RadioBoxForSorting';
 import RadioBox from './RadioBoxForSorting';
 import {
     deleteItem
@@ -75,10 +75,13 @@ function Mypage(props) {
     }
 
     /* 상품 삭제 메소드 */
-    const deleteHandler= (productId) => {
-        console.log("productid",productId)
-        dispatch(deleteItem(productId))
-            .then(response => response.data)
+    const deleteHandler = (event, productId) => {
+            event.preventDefault();
+            console.log("productid", productId)
+            dispatch(deleteItem(productId))
+                .then(response => response.data)
+    
+            window.location.reload()
     }
 
 
@@ -98,11 +101,12 @@ function Mypage(props) {
                     edit
                     <a href={`/product/${product._id}`} />
                 </Button>
-
-                <Button onClick={deleteHandler(product._id)}>
+            <form>
+                <Button type="submit" onClick={(event) => deleteHandler(event, product._id)}>
                     <DeleteOutlined />
                     delete
-                </Button> 
+                </Button>
+                </form>
             </Card>
         </Col>
     })
@@ -154,45 +158,45 @@ function Mypage(props) {
 
     return (
         <div style={{ width: '75%', margin: '3rem auto' }}>
-        <div style={{ textAlign: 'center' }}>
-            <h2>  My Product  <Icon type="gift" />  </h2>
-        </div><br/>
+            <div style={{ textAlign: 'center' }}>
+                <h2>  My Product  <Icon type="gift" />  </h2>
+            </div><br />
 
-        <Row gutter={[16, 16]}>
+            <Row gutter={[16, 16]}>
                 <Col lg={12} xs={24} >
                     <RadioBox
                         list={sort}
                         handleFilters={filters => handleFilters(filters, "sort")}
                     />
                 </Col>
-        </Row><br/>
+            </Row><br />
 
 
 
-        {Products.length === 0 ?
-            <div style={{ display: 'flex', height: '300px', justifyContent: 'center', alignItems: 'center' }}>
-                <h2>No post yet...</h2>
-            </div> :
-            <div>
-                <Row gutter={[16, 16]}>
+            {Products.length === 0 ?
+                <div style={{ display: 'flex', height: '300px', justifyContent: 'center', alignItems: 'center' }}>
+                    <h2>No post yet...</h2>
+                </div> :
+                <div>
+                    <Row gutter={[16, 16]}>
 
-                    {renderCards}
+                        {renderCards}
 
-                </Row>
-
-
-            </div>
-        }
-        <br /><br />
-
-        {PostSize >= Limit &&
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <button onClick={onLoadMore}>Load More</button>
-            </div>
-        }
+                    </Row>
 
 
-    </div>
+                </div>
+            }
+            <br /><br />
+
+            {PostSize >= Limit &&
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <button onClick={onLoadMore}>Load More</button>
+                </div>
+            }
+
+
+        </div>
     )
 }
 

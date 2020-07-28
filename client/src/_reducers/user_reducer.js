@@ -7,7 +7,8 @@ import {
     GET_CART_ITEMS_USER,
     REMOVE_CART_ITEM_USER,
     ON_SUCCESS_BUY_USER,
-    ADD_TO_UPLOAD
+    ADD_TO_UPLOAD,
+    DELETE_ITEM
 } from '../_actions/types';
 
 
@@ -31,6 +32,10 @@ export default function (state = {}, action) {
         case GET_CART_ITEMS_USER:
             return {
                 ...state, cartDetail: action.payload
+            }
+        case DELETE_ITEM:
+            return{
+                ...state, deletedItem: action.payload.deletedItem
             }
         case REMOVE_CART_ITEM_USER:
             return {
