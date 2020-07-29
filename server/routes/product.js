@@ -80,8 +80,6 @@ router.post("/getProducts", (req, res) => {
         }
     }
 
-    console.log("mypage 상품들", findArgs)
-
     if (term) {
         Product.find(findArgs)
             .find({ $text: { $search: term } })
