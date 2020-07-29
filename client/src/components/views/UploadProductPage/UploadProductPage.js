@@ -24,7 +24,6 @@ function UploadProductPage(props) {
 
     const [Images, setImages] = useState([])
 
-
     const onTitleChange = (event) => {
         setTitleValue(event.currentTarget.value)
     }

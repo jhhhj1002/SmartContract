@@ -18,7 +18,7 @@ const mongoose = require("mongoose");
 const connect = mongoose.connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB Connected...'))
   .catch(err => console.log(err));
-
+mongoose.set('useFindAndModify', false);
 app.use(cors())
 
 app.use(bodyParser.urlencoded({ extended: true }));

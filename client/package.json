@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^4.2.1",
     "antd": "^3.24.1",
     "axios": "^0.18.0",
     "formik": "^1.5.8",

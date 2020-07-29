@@ -44,7 +44,8 @@ function RegisterPage(props) {
         lastName: '',
         name: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        wallet: '' // 메타 지갑주소 추가
       }}
       validationSchema={Yup.object().shape({
         name: Yup.string()
@@ -59,7 +60,8 @@ function RegisterPage(props) {
           .required('Password is required'),
         confirmPassword: Yup.string()
           .oneOf([Yup.ref('password'), null], 'Passwords must match')
-          .required('Confirm Password is required')
+          .required('Confirm Password is required'),
+        wallet: Yup.string().required('Metamask Account is required')
       })}
       onSubmit={(values, { setSubmitting }) => {
         setTimeout(() => {
@@ -69,6 +71,7 @@ function RegisterPage(props) {
             password: values.password,
             name: values.name,
             lastname: values.lastname,
+            wallet: values.wallet,
             image: `http://gravatar.com/avatar/${moment().unix()}?d=identicon`
           };
 
@@ -99,9 +102,9 @@ function RegisterPage(props) {
         return (
           <div className="app">
             <h2>Sign up</h2>
-            <Form style={{ minWidth: '375px' }} {...formItemLayout} onSubmit={handleSubmit} >
+            <Form style={{ minWidth: '500px' }} {...formItemLayout} onSubmit={handleSubmit} >
 
-              <Form.Item required label="Name">
+              <Form.Item required label="이름">
                 <Input
                   id="name"
                   placeholder="Enter your name"
@@ -118,7 +121,7 @@ function RegisterPage(props) {
                 )}
               </Form.Item>
 
-              <Form.Item required label="Last Name">
+              <Form.Item required label="성">
                 <Input
                   id="lastName"
                   placeholder="Enter your Last Name"
@@ -135,7 +138,25 @@ function RegisterPage(props) {
                 )}
               </Form.Item>
 
-              <Form.Item required label="Email" hasFeedback validateStatus={errors.email && touched.email ? "error" : 'success'}>
+              {/*메타주소*/}
+              <Form.Item required label="메타마스크 주소">
+                <Input
+                  id="wallet"
+                  placeholder="Enter your Metamask account"
+                  type="text"
+                  value={values.wallet}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={
+                    errors.wallet && touched.wallet ? 'text-input error' : 'text-input'
+                  }
+                />
+                {errors.wallet && touched.wallet && (
+                  <div className="input-feedback">{errors.wallet}</div>
+                )}
+              </Form.Item>
+
+              <Form.Item required label="이메일" hasFeedback validateStatus={errors.email && touched.email ? "error" : 'success'}>
                 <Input
                   id="email"
                   placeholder="Enter your Email"
@@ -152,7 +173,7 @@ function RegisterPage(props) {
                 )}
               </Form.Item>
 
-              <Form.Item required label="Password" hasFeedback validateStatus={errors.password && touched.password ? "error" : 'success'}>
+              <Form.Item required label="비밀번호" hasFeedback validateStatus={errors.password && touched.password ? "error" : 'success'}>
                 <Input
                   id="password"
                   placeholder="Enter your password"
@@ -169,7 +190,7 @@ function RegisterPage(props) {
                 )}
               </Form.Item>
 
-              <Form.Item required label="Confirm" hasFeedback>
+              <Form.Item required label="비밀번호 확인" hasFeedback>
                 <Input
                   id="confirmPassword"
                   placeholder="Enter your confirmPassword"
@@ -188,7 +209,7 @@ function RegisterPage(props) {
 
               <Form.Item {...tailFormItemLayout}>
                 <Button onClick={handleSubmit} type="primary" disabled={isSubmitting}>
-                  Submit
+                  회원가입
                 </Button>
               </Form.Item>
             </Form>

@@ -23,7 +23,8 @@ router.get("/auth", auth, (req, res) => {
         image: req.user.image,
         cart: req.user.cart,
         history: req.user.history,
-        upload: req.user.upload //내가추가
+        upload: req.user.upload,
+        wallet: req.user.wallet
     });
 });
 
@@ -76,8 +77,8 @@ router.get("/logout", auth, (req, res) => {
 
 
 router.post("/updateUserUploadInfo", auth, (req, res) => { // Product upload시 Mongo DB User의 upload에 추가
-    console.log(req.user._id);
-    console.log(req.body.productId);
+    console.log("upload에 추가할 user", req.user._id);
+    console.log("upload에 추가할 productid", req.body.productId);
 
     User.findOne({ _id: req.user._id }, (err, userInfo) => {
 
@@ -102,13 +103,12 @@ router.post("/updateUserUploadInfo", auth, (req, res) => { // Product upload시 
 
 });
 
-
 router.get('/addToCart', auth, (req, res) => {
 
     User.findOne({ _id: req.user._id }, (err, userInfo) => {
         let duplicate = false;
 
-        console.log(userInfo)
+        console.log("user 정보",userInfo)
 
         userInfo.cart.forEach((item) => {
             if (item.id == req.query.productId) {
@@ -210,7 +210,7 @@ router.get('/userUploadInfo', auth, (req, res) => { // User의 upload목록 Mypa
         (err, userInfo) => {
             let upload = userInfo.upload;
             let array = upload.map(item => {
-                console.log(item.id)
+                console.log("/userUploadInfo upload목록",item.id)
                 return item.id
             })
 
@@ -320,5 +320,21 @@ router.get('/getHistory', auth, (req, res) => {
     )
 })
 
+router.post('/addtoupload', auth, (req, res) => {
+    User.findOne({_id: req.user._id}, (err, userInfo)=>{
+        User.findByIdAndUpdate({ _id:req.user._id},{
+            $push: {
+                upload: {
+                    id: req.body.productId
+                }
+            }
+        },
+            {new:true},
+            (err, userInfo) => {
+                if(err) return res.status(400).json({success : false, err})
+                res.status(200).send(userInfo.upload)
+            })
+    })
+})
 
 module.exports = router;

@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Typography, Button, Form, Input } from 'antd';
 import axios from 'axios';
 import FileUpload from '../../utils/FileUpload';
+import { useDispatch } from 'react-redux';
+import {addToUpload} from '../../../_actions/user_actions';
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -14,7 +16,10 @@ const Continents = [
     { key: 5, value: "SW" },
     { key: 6, value: "Etc" }
 ]
-
+const dispatch = useDispatch();
+const uploadclickHandler = () =>{
+    dispatch(addToUpload(props.detail._id))
+}
 export class UploadProductPage extends Component {
 
     state = {
@@ -121,7 +126,7 @@ export class UploadProductPage extends Component {
                 </select>
                 <br /><br />
 
-                <Button type="primary" size="large" onClick={this.onSubmit}>
+                <Button type="primary" size="large" onClick={this.onSubmit, uploadclickHandler}>
                     Submit
                 </Button>
             </Form>
