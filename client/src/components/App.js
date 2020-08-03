@@ -14,7 +14,7 @@ import DetailProductPage from './views/DetailProductPage/DetailProductPage';
 import CartPage from './views/CartPage/CartPage';
 import HistoryPage from './views/HistoryPage/HistoryPage';
 import Mypage from './views/MyPage/Mypage';
-import Edit from './views/Edit/Edit';
+import Edit from './views/EditProduct/EditProduct';
 
 class App extends Component{
   componentDidMount = async () => {
@@ -60,7 +60,7 @@ class App extends Component{
           <Route exact path="/user/cart" component={Auth(CartPage, true)} />
           <Route exact path="/history" component={Auth(HistoryPage, true)} />
           <Route exact path="/mypage" component={Auth(Mypage, true)} />
-          <Route exact path="/edit" component={Auth(Edit, true)} />
+          <Route exact path="/edit/:productId" component={Auth(Edit, true)} />
         </Switch>
       </div>
       <Footer />

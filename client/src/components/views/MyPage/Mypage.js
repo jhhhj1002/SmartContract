@@ -101,8 +101,7 @@ function Mypage(props) {
                 /><br/>
                 <Button style={{ float: 'left',marginRight : '1rem'}}>
                     <EditOutlined />
-                    edit
-                    <a href={`/product/${product._id}`} />
+                    <a href={`/edit/${product._id}`}>edit</a>
                 </Button>
                 <form>
                 <Button type="submit" onClick={(event) => deleteHandler(event, product._id)} style={{ float: 'left'}}>
