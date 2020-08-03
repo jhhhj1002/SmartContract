@@ -43,7 +43,7 @@ router.post("/uploadImage", auth, (req, res) => { // 가져온 이미지 저장�
 
 
 router.post("/uploadProduct", auth, (req, res) => {
-
+    console.log("writer body", req.body)
     //save all the data we got from the client into the DB 
     const product = new Product(req.body)
 
@@ -54,7 +54,6 @@ router.post("/uploadProduct", auth, (req, res) => {
     })
 
 });
-
 
 router.post("/getProducts", (req, res) => {
 
@@ -103,6 +102,23 @@ router.post("/getProducts", (req, res) => {
             })
     }
 
+});
+
+//EditProduct.js 수정한 상품정보 update
+router.post("/editProduct", auth, (req, res) => {
+    console.log("editproduct안 ", req.body)
+    Product.findOneAndUpdate({_id: req.body.id},{
+            title: req.body.title,
+            description: req.body.description,
+            price: req.body.price,
+            images: req.body.images,
+            continents: req.body.continents,
+        
+    }, { new: true }).then(function () {
+        console.log("product edited");
+    }).catch(function (error) {
+        console.log(error);
+    })
 });
 
 /*Mypage.js item 리무브*/

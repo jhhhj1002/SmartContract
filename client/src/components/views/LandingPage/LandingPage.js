@@ -69,7 +69,7 @@ function LandingPage() {
         return <Col lg={6} md={8} xs={24}>
             <Card
                 hoverable={true}
-                cover={<a href={`/product/${product._id}`} style={{  marginTop: '1rem' }} > <ImageSlider images={product.images} /></a>}
+                cover={<a href={`/product/${product._id}`} style={{ marginTop: '1rem' }} > <ImageSlider images={product.images} /></a>}
             >
                 <Meta
                     title={product.title}
@@ -145,7 +145,7 @@ function LandingPage() {
         <div style={{ width: '75%', margin: '3rem auto' }}>
             <div style={{ textAlign: 'center' }}>
                 <h2>  Let's look around our products <Icon type="smile" />  </h2>
-            </div><br/>
+            </div><br />
 
 
             {/* Filter  */}
@@ -177,7 +177,7 @@ function LandingPage() {
 
 
             {Products.length === 0 ?
-                <div style={{ display: 'flex', height: '300px', justifyContent: 'center', alignItems: 'center'}}>
+                <div style={{ display: 'flex', height: '300px', justifyContent: 'center', alignItems: 'center' }}>
                     <h2>No post yet...</h2>
                 </div> :
                 <div>
