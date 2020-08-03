@@ -12,11 +12,13 @@ import {
 // import RadioBox from '../LandingPage/Sections/RadioBox';
 
 // 내가 업로드한 내역 ==> Done
-// Product 정렬 + Filters, continents, Skip, Limit 필요없는 것들 수정 
-// Product 수정 버튼 추가 - ant-design/icons 활용
-// Product 삭제 버튼 추가 - ant-design/icons 활용
-//  Product 삭제 동작 구현 - deleteHandler에서 productId는 제대로 받아오지만 deleteItem메소드로가면 전달이 안되는것 같음
+// Product 정렬 + Filters, continents, Skip, Limit 필요없는 것들 수정 ==> Done
+// Product 수정 버튼 추가 - ant-design/icons 활용 -> css 조금 수정함 (지현) ==> Done
+// Product 삭제 버튼 추가 - ant-design/icons 활용 -> css 조금 수정함 (지현) ==> Done
+// 회원정보 수정 버튼 추가 ==> Done
+//  Product 삭제 동작 구현 - deleteHandler에서 productId는 제대로 받아오지만 deleteItem메소드로가면 전달이 안되는것 같음 ==> Done
 // Product 수정 페이지 만들기
+// User 수정 페이지 만들기
 // + 내가 구매한 내역 -> History 연결 ? -> 이건위에 바로 history잇으니까 없어도 될듯해
 
 
@@ -46,7 +48,7 @@ function Mypage(props) {
     }, [])
 
     const getProducts = (variables) => {
-        Axios.get('/api/users/userUploadInfo', variables)
+        Axios.post('/api/users/userUploadInfo', variables)
             .then(response => {
                 if (response.data.success) {
                     if (variables.loadMore) {
@@ -76,6 +78,7 @@ function Mypage(props) {
 
     /* 상품 삭제 메소드 */
     const deleteHandler = (event, productId) => {
+            alert("Are you sure you want to delete it ?")
             event.preventDefault();
             console.log("productid", productId)
             dispatch(deleteItem(productId))
@@ -90,19 +93,19 @@ function Mypage(props) {
         return <Col lg={6} md={8} xs={24}>
             <Card
                 hoverable={true}
-                cover={<a href={`/product/${product._id}`} > <ImageSlider images={product.images} /></a>}
+                cover={<a href={`/product/${product._id}`} style={{  marginTop: '1rem' }} > <ImageSlider images={product.images} /></a>}
             >
                 <Meta
                     title={product.title}
                     description={`$${product.price}`}
-                />
-                <Button>
+                /><br/>
+                <Button style={{ float: 'left',marginRight : '1rem'}}>
                     <EditOutlined />
                     edit
                     <a href={`/product/${product._id}`} />
                 </Button>
-            <form>
-                <Button type="submit" onClick={(event) => deleteHandler(event, product._id)}>
+                <form>
+                <Button type="submit" onClick={(event) => deleteHandler(event, product._id)} style={{ float: 'left'}}>
                     <DeleteOutlined />
                     delete
                 </Button>
@@ -112,41 +115,26 @@ function Mypage(props) {
     })
 
     const showFilteredResults = (filters) => {
-
+        console.log(filters)
         const variables = {
             skip: 0,
             limit: Limit,
             filters: filters
-
         }
         getProducts(variables)
         setSkip(0)
 
     }
 
-    const handlePrice = (value) => {
-        const data = sort;
-        let array = [];
-
-        for (let key in data) {
-
-            if (data[key]._id === parseInt(value, 10)) {
-                array = data[key].array;
-            }
-        }
-        console.log('array', array)
-        return array
-    }
-
     const handleFilters = (filters, category) => {
+        console.log(filters)
 
         const newFilters = { ...Filters }
 
         newFilters[category] = filters
 
         if (category === "sort") {
-            let priceValues = handlePrice(filters)
-            newFilters[category] = priceValues
+            newFilters[category] = filters
 
         }
 
@@ -161,6 +149,13 @@ function Mypage(props) {
             <div style={{ textAlign: 'center' }}>
                 <h2>  My Product  <Icon type="gift" />  </h2>
             </div><br />
+            <div>
+                <Button style={{ float: 'right'}}>
+                    <EditOutlined />
+                    My Account
+                    <a href={``} />
+                </Button>
+            </div><br/><br/>
 
             <Row gutter={[16, 16]}>
                 <Col lg={12} xs={24} >

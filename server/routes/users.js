@@ -201,9 +201,24 @@ router.get('/userCartInfo', auth, (req, res) => {
 
 
 
-router.get('/userUploadInfo', auth, (req, res) => { // User의 upload목록 Mypage에 가지고옴
-    let order = req.body.order ? req.body.order : "desc";
-    let sortBy = req.body.sortBy ? req.body.sortBy : "_id";
+router.post('/userUploadInfo', auth, (req, res) => { // User의 upload목록 Mypage에 가지고옴
+    let order = "desc";
+    let sortBy = "_id";
+
+    for (let key in req.body.filters) {
+        if (req.body.filters[key].length > 0) {
+            if (key === "sort") {
+                if(req.body.filters[key] !=0 ){
+                    sortBy = "price"
+                    if(req.body.filters[key]==2)
+                        order = "asc"
+                }
+            }
+        }
+    }
+    
+
+    console.log("정렬기준 : " + sortBy)
 
     User.findOne(
         { _id: req.user._id },
