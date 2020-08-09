@@ -41,7 +41,6 @@ function EditProduct(props) {
             })
 
     }, [])
-    console.log("editproduct의 상품 usestate =",Product)
 
     const onTitleChange = (event) => {
         setTitleValue(event.currentTarget.value)
@@ -80,12 +79,9 @@ function EditProduct(props) {
             images: Images,
             continents: ContinentValue,
         }
-        console.log("submit 안에 들어옴 p.id=", productId)
-
 
         Axios.post('/api/product/editProduct', variables)
             .then(response => {
-                console.log("axios 안에 들어옴")
                 if (response.data.success) {
                     alert('Product Successfully Edited')
 
