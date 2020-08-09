@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Typography, Button, Form, Input } from 'antd';
 import FileUpload from '../../utils/FileUpload'
 import Axios from 'axios';
+import { set } from 'mongoose';
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -19,23 +20,28 @@ function EditProduct(props) {
 
     //상품id갖고오기
     const productId = props.match.params.productId
-    const productTitle = props.match.params.productTitle
+
     const [Product, setProduct] = useState([])
+    const [TitleValue, setTitleValue] = useState("")
+    const [DescriptionValue, setDescriptionValue] = useState("")
+    const [PriceValue, setPriceValue] = useState(0)
+    const [ContinentValue, setContinentValue] = useState(0)
+
+    const [Images, setImages] = useState([])
+
     useEffect(() => {
         Axios.get(`/api/product/products_by_id?id=${productId}&type=single`)
             .then(response => {
                 setProduct(response.data[0])
+                setTitleValue(response.data[0].title)
+                setDescriptionValue(response.data[0].description)
+                setPriceValue(response.data[0].price)
+                setContinentValue(response.data[0].continents)
+                setImages(...Images, response.data[0].images)
             })
 
     }, [])
-    console.log("editproduct의 상품 usestate =",productTitle)
-
-    const [TitleValue, setTitleValue] = useState(productTitle)
-    const [DescriptionValue, setDescriptionValue] = useState(Product.description)
-    const [PriceValue, setPriceValue] = useState(Product.price)
-    const [ContinentValue, setContinentValue] = useState(Product.continents)
-
-    const [Images, setImages] = useState([])
+    console.log("editproduct의 상품 usestate =",Product)
 
     const onTitleChange = (event) => {
         setTitleValue(event.currentTarget.value)

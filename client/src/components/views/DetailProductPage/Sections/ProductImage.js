@@ -12,6 +12,7 @@ function ProductImage(props) {
                 images.push({
                     original: `http://localhost:5000/${item}`,
                     thumbnail: `http://localhost:5000/${item}`
+                    //item -> upload\사진이름.jpg
                 })
             })
             setImages(images)
