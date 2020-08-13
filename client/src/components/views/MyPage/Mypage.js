@@ -149,11 +149,12 @@ function Mypage(props) {
                 <h2>  My Product  <Icon type="gift" />  </h2>
             </div><br />
             <div>
-                <Button style={{ float: 'right'}}>
-                    <EditOutlined />
-                    My Account
-                    <a href={``} />
-                </Button>
+                <a href={`myaccount`} >
+                    <Button style={{ float: 'right'}}>
+                        <EditOutlined />
+                            My Account
+                    </Button>
+                </a>
             </div><br/><br/>
 
             <Row gutter={[16, 16]}>
