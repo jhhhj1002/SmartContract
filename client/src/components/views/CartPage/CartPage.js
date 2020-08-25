@@ -115,7 +115,8 @@ function CartPage(props) {
 
 
 
-            {/* Paypal Button */}
+
+            {/* Paypal Button    @@@@@@@@@@@@@@@@@@@@@@@@@@@채연 변경할 버튼 구간@@@@@@@@@@@@@@@@@@*/}
 
             {ShowTotal &&
 
