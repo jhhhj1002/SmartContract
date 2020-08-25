@@ -66,6 +66,31 @@ router.post("/login", (req, res) => {
     });
 });
 
+
+router.post("/update", (req, res) => {
+
+    console.log(req.body)
+
+    User.findOneAndUpdate({ _id: req.body.id },
+        {
+            $set: {
+                name : req.body.name,
+                email : req.body.email,
+                wallet : req.body.wallet
+            }
+        },
+        (err, doc) => {
+        if (err) return res.json({ success: false, err });
+        return res.status(200).send({
+            success: true
+        });
+    });
+});
+
+
+
+
+
 router.get("/logout", auth, (req, res) => {
     User.findOneAndUpdate({ _id: req.user._id }, { token: "", tokenExp: "" }, (err, doc) => {
         if (err) return res.json({ success: false, err });
