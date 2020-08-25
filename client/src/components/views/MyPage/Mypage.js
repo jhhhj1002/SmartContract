@@ -101,8 +101,7 @@ function Mypage(props) {
                 /><br/>
                 <Button style={{ float: 'left',marginRight : '1rem'}}>
                     <EditOutlined />
-                    edit
-                    <a href={`/product/${product._id}`} />
+                    <a href={`/edit/${product._id}`}>edit</a>
                 </Button>
                 <form>
                 <Button type="submit" onClick={(event) => deleteHandler(event, product._id)} style={{ float: 'left'}}>
@@ -150,11 +149,12 @@ function Mypage(props) {
                 <h2>  My Product  <Icon type="gift" />  </h2>
             </div><br />
             <div>
-                <Button style={{ float: 'right'}}>
-                    <EditOutlined />
-                    My Account
-                    <a href={``} />
-                </Button>
+                <a href={`myaccount`} >
+                    <Button style={{ float: 'right'}}>
+                        <EditOutlined />
+                            My Account
+                    </Button>
+                </a>
             </div><br/><br/>
 
             <Row gutter={[16, 16]}>
