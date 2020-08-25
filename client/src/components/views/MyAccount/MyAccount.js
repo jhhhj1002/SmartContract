@@ -1,8 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react'
+import moment from "moment";
 import Axios from 'axios';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
+import { updateUser } from "../../../_actions/user_actions";
 import { useDispatch } from "react-redux";
+
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import {
     Form,
@@ -37,7 +41,17 @@ const formItemLayout = {
   };
 
 
-function MyAccount() {
+
+  
+  // 이메일 인증시 대학교 메일 형식인지 체크
+  // 이메일 인증 구현 + db 수정 => 인증된 사용자만 upload 가능 수정 
+  // 메타마스크 주소 유효성 검사 추가 
+  // 대학교 메일 인증시에만 upload 가능하다는 안내문 -> Landing Page
+
+
+
+
+function MyAccount(props) {
     const dispatch = useDispatch();
     // const [Account, setAccount] = useState([])
 
@@ -74,19 +88,34 @@ function MyAccount() {
           validationSchema={Yup.object().shape({
             name: Yup.string()
               .required('Name is required'),
-            lastName: Yup.string()
-              .required('Last Name is required'),
             email: Yup.string()
               .email('Email is invalid')
               .required('Email is required'),
-            password: Yup.string()
-              .min(6, 'Password must be at least 6 characters')
-              .required('Password is required'),
-            confirmPassword: Yup.string()
-              .oneOf([Yup.ref('password'), null], 'Passwords must match')
-              .required('Confirm Password is required'),
             wallet: Yup.string().required('Metamask Account is required')
           })}
+          onSubmit={(values, { setSubmitting }) => {
+            setTimeout(() => {
+    
+              let dataToSubmit = {
+                email: values.email,
+                id : Account._id,
+                name: values.name,
+                wallet: values.wallet,
+                image: `http://gravatar.com/avatar/${moment().unix()}?d=identicon`
+              };
+    
+              dispatch(updateUser(dataToSubmit)).then(response => {
+                if (response.payload.success) {
+                  alert("회원정보 수정이 완료되었습니다")
+                  props.history.push("/myaccount");
+                } else {
+                  alert(response.payload.err.errmsg)
+                }
+              })
+    
+              setSubmitting(false);
+            }, 500);
+          }}
         >
 
           {props => {
@@ -102,18 +131,13 @@ function MyAccount() {
 
             return (
               <div className="app">
-                <h2>Sign up</h2>
+                <h2>My Account</h2>
                 <Form style={{ minWidth: '500px' }} {...formItemLayout} onSubmit={handleSubmit} >
                   <Form.Item required label="이름">
                     <Input
                       id="name"
-                      //placeholder={Account.email}
                       type="text"
-                    //   value="333"
-                      //value={values.name ? values.name : Account.email}
-                      
-                       value={values.name}
-                      
+                      value={values.name}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       className={
@@ -140,8 +164,19 @@ function MyAccount() {
                   <div className="input-feedback">{errors.email}</div>
                 )}
               </Form.Item>
+
+
+              {/*  대학교 메일 형식인지 체크 필수 !!!!!!!!!!!!!!!!!!! */}
+              <Form.Item {...tailFormItemLayout}> 
+                  <Button style={{ float: 'right'}}>
+                    <EditOutlined />
+                    <a href={""}> 인증메일 전송</a> 
+                    {/* <a href={`/edit/${product._id}`}>edit</a> */}
+                  </Button>
+              </Form.Item>
+
                   {/*메타주소*/}
-                  <Form.Item required label="메타마스크 주소">
+                  <Form.Item required label="메타마스크 주소" hasFeedback validateStatus={errors.wallet && touched.wallet ? "error" : 'success'}>
                 <Input
                   id="wallet"
                   placeholder="Enter your Metamask account"
@@ -159,7 +194,7 @@ function MyAccount() {
               </Form.Item>
               <Form.Item {...tailFormItemLayout}>
                 <Button onClick={handleSubmit} type="primary" disabled={isSubmitting}>
-                  회원가입
+                  수정 완료
                 </Button>
               </Form.Item>
 
