@@ -7,7 +7,8 @@ import {
 } from '../../../_actions/user_actions';
 import UserCardBlock from './Sections/UserCardBlock';
 import { Result, Empty } from 'antd';
-import Paypal from '../../utils/Paypal';
+import web3 from 'web3';
+//import Paypal from '../../utils/Paypal';
 
 function CartPage(props) {
     const dispatch = useDispatch();
@@ -79,6 +80,44 @@ function CartPage(props) {
         console.log('Transaction canceled')
     }
 
+    const buyRealEstate = () => {
+        // var id = $('#id').val();
+        // var name = $('#name').val();
+        // var price = $('#price').val();
+        // var age = $('#age').val();
+    
+        // console.log(id);
+        // console.log(price);
+        // console.log(name);
+        // console.log(age);
+    
+        web3.eth.getAccounts(function(error, accounts) {
+          if(error) {
+            console.log('error');
+          }
+          var account = accounts[0];
+          this.RealEstate.deployed().then(function(instance) {
+            // utf8 미리 파일 첨부해둠
+
+            //var nameUtf8Encoded = utf8.encode(name);
+
+
+            // byte type을 hex로 변경
+            // payable함수이기 때문에 ether도 전송해야 한다. 
+            // 어느 계정에서 이 함수를 가져온지도 명시 해야 한다. from : account
+            // 계정정보 호출은 web3로 해야한다. 
+            return instance.buyRealEstate(0, web3, 0, { from: account, value: 0 }); 
+          }).then(function(){
+            // input clear 확인
+            // $('#name').val('');
+            // $('#age').val('');
+            // $('#buyModal').modal('hide');
+            //return App.loadRealEstates(); 
+          }).catch(function(err) {
+            console.log(err.message);
+          });
+        });
+    }
 
     return (
         <div style={{ width: '85%', margin: '3rem auto' }}>
@@ -118,16 +157,20 @@ function CartPage(props) {
 
             {/* Paypal Button    @@@@@@@@@@@@@@@@@@@@@@@@@@@채연 변경할 버튼 구간@@@@@@@@@@@@@@@@@@*/}
 
-            {ShowTotal &&
-
-                <Paypal
-                    toPay={Total}
-                    onSuccess={transactionSuccess}
-                    transactionError={transactionError}
-                    transactionCanceled={transactionCanceled}
-                />
-
-            }
+                <button class="btn btn-info btn-buy"
+                    type="button"
+                    data-toggle="modal"
+                    data-target="#buyModal">
+                    구매
+                </button>
+                <div class="modal fade" tabindex="-1" role="dialog" id="buyModal">
+                    <div class="modal-content">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="buyRealEstate(); return false;">제출</button>
+                    </div>
+                    </div>
+                </div>
+            
 
 
 
