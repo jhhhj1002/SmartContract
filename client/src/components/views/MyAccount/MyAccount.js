@@ -107,7 +107,7 @@ function MyAccount(props) {
               dispatch(updateUser(dataToSubmit)).then(response => {
                 if (response.payload.success) {
                   alert("회원정보 수정이 완료되었습니다")
-                  props.history.push("/myaccount");
+                  props.history.push("/mypage");
                 } else {
                   alert(response.payload.err.errmsg)
                 }

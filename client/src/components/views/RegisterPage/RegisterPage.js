@@ -4,6 +4,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { registerUser } from "../../../_actions/user_actions";
 import { useDispatch } from "react-redux";
+import Web3 from 'web3';
 
 import {
   Form,
@@ -36,6 +37,7 @@ const tailFormItemLayout = {
 
 function RegisterPage(props) {
   const dispatch = useDispatch();
+  const addr= window.ethereum._state.accounts[0];
   return (
 
     <Formik
@@ -61,7 +63,7 @@ function RegisterPage(props) {
         confirmPassword: Yup.string()
           .oneOf([Yup.ref('password'), null], 'Passwords must match')
           .required('Confirm Password is required'),
-        wallet: Yup.string().required('Metamask Account is required')
+        //wallet: Yup.string().required('Metamask Account is required')
       })}
       onSubmit={(values, { setSubmitting }) => {
         setTimeout(() => {
@@ -71,7 +73,7 @@ function RegisterPage(props) {
             password: values.password,
             name: values.name,
             lastname: values.lastname,
-            wallet: values.wallet,
+            wallet: addr,
             image: `http://gravatar.com/avatar/${moment().unix()}?d=identicon`
           };
 
@@ -142,7 +144,7 @@ function RegisterPage(props) {
                   id="wallet"
                   placeholder="Enter your Metamask account"
                   type="text"
-                  value={values.wallet}
+                  value={addr}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   className={

@@ -166,7 +166,7 @@ function CartPage(props) {
                 <div class="modal fade" tabindex="-1" role="dialog" id="buyModal">
                     <div class="modal-content">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="buyRealEstate(); return false;">제출</button>
+                        <button type="button" class="btn btn-primary" onclick={buyRealEstate}>제출</button>
                     </div>
                     </div>
                 </div>

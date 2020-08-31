@@ -46,7 +46,6 @@ class App extends Component{
     else {
      console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
    }
-   
  }
  render(){ return (
     <Suspense fallback={(<div>Loading...</div>)}>
