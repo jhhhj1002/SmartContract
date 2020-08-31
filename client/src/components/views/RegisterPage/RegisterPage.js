@@ -37,7 +37,7 @@ const tailFormItemLayout = {
 
 function RegisterPage(props) {
   const dispatch = useDispatch();
-  const addr= window.ethereum._state.accounts[0];
+  const addr= window.ethereum._state.accounts[0]; //현재 메타 계정가져오기
   return (
 
     <Formik
