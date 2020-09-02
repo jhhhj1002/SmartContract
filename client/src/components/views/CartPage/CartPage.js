@@ -15,6 +15,8 @@ function CartPage(props) {
     const [Total, setTotal] = useState(0)
     const [ShowTotal, setShowTotal] = useState(false)
     const [ShowSuccess, setShowSuccess] = useState(false)
+    var Web3 = new web3(web3.givenProvider || 'ws://some.local-or-remote.node:8546')
+    //https://web3js.readthedocs.io/en/v1.2.0/web3-eth.html 여기서 web3함수랑 초기설정있음!
 
     useEffect(() => {
 
@@ -90,8 +92,12 @@ function CartPage(props) {
         // console.log(price);
         // console.log(name);
         // console.log(age);
-    
-        web3.eth.getAccounts(function(error, accounts) {
+
+        //실험용 콘솔 출력
+        Web3.eth.getAccounts()
+        .then(console.log);
+
+        Web3.eth.getAccounts(function(error, accounts) {
           if(error) {
             console.log('error');
           }
@@ -106,7 +112,7 @@ function CartPage(props) {
             // payable함수이기 때문에 ether도 전송해야 한다. 
             // 어느 계정에서 이 함수를 가져온지도 명시 해야 한다. from : account
             // 계정정보 호출은 web3로 해야한다. 
-            return instance.buyRealEstate(0, web3, 0, { from: account, value: 0 }); 
+            return instance.buyRealEstate(0, Web3, 0, { from: account, value: 0 }); 
           }).then(function(){
             // input clear 확인
             // $('#name').val('');
@@ -156,7 +162,6 @@ function CartPage(props) {
 
 
             {/* Paypal Button    @@@@@@@@@@@@@@@@@@@@@@@@@@@채연 변경할 버튼 구간@@@@@@@@@@@@@@@@@@*/}
-
                 <button class="btn btn-info btn-buy"
                     type="button"
                     data-toggle="modal"
@@ -166,7 +171,7 @@ function CartPage(props) {
                 <div class="modal fade" tabindex="-1" role="dialog" id="buyModal">
                     <div class="modal-content">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onclick={buyRealEstate}>제출</button>
+                        <button type="button" class="btn btn-primary" onClick={buyRealEstate}>제출</button>
                     </div>
                     </div>
                 </div>
