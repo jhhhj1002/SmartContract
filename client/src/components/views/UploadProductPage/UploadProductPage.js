@@ -1,7 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Typography, Button, Form, Input } from 'antd';
 import FileUpload from '../../utils/FileUpload'
 import Axios from 'axios';
+
+import Config from '../../Config';
+
+
+// 1. 코드 정리 해야함 -> 지현
+
+
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -15,7 +22,130 @@ const Continents = [
     { key: 6, value: "Etc" }
 ]
 
+
+
 function UploadProductPage(props) {
+
+    const [MyNFTValues, setMyNFTValues] = useState({ account: '', contractInstance: '',tokenId: '',isRegistered: false})
+    const [MyAuctionValues, setMyAuctionValues] = useState({ auctionTitle: '', contractInstance: '', price: ''})
+
+    const getRandomInt = (min, max) => {
+        return Math.floor(Math.random() * (max - min + 1)) + min
+    }
+
+    useEffect(() => {
+        setMyNFTValues({account : window.ethereum._state.accounts[0], contractInstance: window.web3.eth.contract(Config.MYNFT_ABI).at(Config.MYNFT_CA),tokenId : getRandomInt(123456789,999999999)});
+        setMyAuctionValues({contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA)});
+    },[]);
+
+
+    const uploadProduct = (variables) =>{
+        Axios.post('/api/product/uploadProduct', variables)
+              .then(response => {
+                  if (response.data.success) {
+                      Axios.post('/api/users/updateUserUploadInfo', {"productId":response.data.productId}) //내가추가
+                      .then(response => {
+                          if (response.data.success) {
+                                  alert('Product Successfully Uploaded')
+                                      props.history.push('/')
+                                  } else {
+                                      alert('Failed to upload Product')
+                                  }
+                              })
+                  } else {
+                      alert('Failed to upload Product')
+                  }
+              })
+    }
+
+
+
+    const getCurrentBlock= () => {
+        return new Promise((resolve, reject ) => {
+            window.web3.eth.getBlockNumber((err, blocknumber) => {
+              if(!err) resolve(blocknumber)
+              reject(err)
+          })
+        })
+      }
+
+
+      const watchTokenRegistered = (cb) => {
+        const currentBlock = getCurrentBlock()
+        const eventWatcher = MyNFTValues.contractInstance.TokenRegistered({}, {fromBlock: currentBlock - 1, toBlock: 'latest'})
+        eventWatcher.watch(cb)
+        alert("Token registered...!")
+        MyNFTValues.isRegistered = true
+        console.log(MyNFTValues)
+      }
+
+      const watchCreated = (cb,variables) => {
+        const currentBlock = getCurrentBlock()
+        const eventWatcher = MyAuctionValues.contractInstance.AuctionCreated({}, {fromBlock: currentBlock - 1, toBlock: 'latest'})
+        eventWatcher.watch(cb)
+        alert("Creation completed...!")
+        uploadProduct(variables)
+      }
+
+
+      const createAuction = (variables) => {     
+  
+        const price = window.web3.toWei(MyAuctionValues.price, 'ether')
+        MyAuctionValues.contractInstance.createAuction(Config.MYNFT_CA, MyNFTValues.tokenId, MyAuctionValues.auctionTitle, price, {from: MyNFTValues.account, gas: Config.GAS_AMOUNT}, (error, transactionHash) => {     
+              console.log("txhash",transactionHash)    
+              watchCreated(transactionHash,variables)
+          })
+
+        // watchCreated((error, result) => {
+        //   if(!error) {
+        //       alert("Creation completed...!")
+        //       uploadProduct(variables)
+        //     }
+        // })
+      }
+
+
+
+    const onSubmit = (event) => {
+        event.preventDefault();
+
+        if (!TitleValue || !DescriptionValue || !PriceValue || !ContinentValue || !Images) {
+            return alert('fill all the fields first!')
+        }
+
+        const variables = {
+            tokenId : MyNFTValues.tokenId,
+            writer: props.user.userData._id,
+            title: TitleValue,
+            description: DescriptionValue,
+            price: PriceValue,
+            images: Images,
+            continents: ContinentValue,
+        }
+
+        MyNFTValues.contractInstance.registerUniqueToken(MyNFTValues.account, MyNFTValues.tokenId, {
+            from: MyNFTValues.account,
+            gas: Config.GAS_AMOUNT
+          }, (error, result) => {
+            console.log("result",result)   
+
+            watchTokenRegistered(result)
+            createAuction(variables)
+
+            // watchTokenRegistered((error, result) => {
+            //     if(!error) {
+            //       alert("Token registered...!")
+            //       MyNFTValues.isRegistered = true
+            //     }
+            // })
+
+        })
+    }
+
+    //------------------------------------------------------------------------
+
+
+
 
     const [TitleValue, setTitleValue] = useState("")
     const [DescriptionValue, setDescriptionValue] = useState("")
@@ -43,44 +173,59 @@ function UploadProductPage(props) {
     const updateImages = (newImages) => {
         setImages(newImages)
     }
-    const onSubmit = (event) => {
-        event.preventDefault();
+    // const onSubmit = (event) => {
+    //     event.preventDefault();
 
 
-        if (!TitleValue || !DescriptionValue || !PriceValue ||
-            !ContinentValue || !Images) {
-            return alert('fill all the fields first!')
-        }
+    //     if (!TitleValue || !DescriptionValue || !PriceValue ||
+    //         !ContinentValue || !Images) {
+    //         return alert('fill all the fields first!')
+    //     }
 
-        const variables = {
-            writer: props.user.userData._id,
-            title: TitleValue,
-            description: DescriptionValue,
-            price: PriceValue,
-            images: Images,
-            continents: ContinentValue,
-        }
+    //     const variables = {
+    //         writer: props.user.userData._id,
+    //         title: TitleValue,
+    //         description: DescriptionValue,
+    //         price: PriceValue,
+    //         images: Images,
+    //         continents: ContinentValue,
+    //     }
 
 
 
-        Axios.post('/api/product/uploadProduct', variables)
-            .then(response => {
-                if (response.data.success) {
-                    Axios.post('/api/users/updateUserUploadInfo', {"productId":response.data.productId}) //내가추가
-                    .then(response => {
-                        if (response.data.success) {
-                                alert('Product Successfully Uploaded')
-                                    props.history.push('/')
-                                } else {
-                                    alert('Failed to upload Product')
-                                }
-                            })
-                } else {
-                    alert('Failed to upload Product')
-                }
-            })
+    //     Axios.post('/api/product/uploadProduct', variables)
+    //         .then(response => {
+    //             if (response.data.success) {
+    //                 Axios.post('/api/users/updateUserUploadInfo', {"productId":response.data.productId}) //내가추가
+    //                 .then(response => {
+    //                     if (response.data.success) {
+    //                             alert('Product Successfully Uploaded')
+    //                                 props.history.push('/')
+    //                             } else {
+    //                                 alert('Failed to upload Product')
+    //                             }
+    //                         })
+    //             } else {
+    //                 alert('Failed to upload Product')
+    //             }
+    //         })
             
-    }
+    // }
+
+
+
+
+        //------------------------------------------------------------------------
+
+    useEffect(() => {
+        setMyAuctionValues({auctionTitle: TitleValue, contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA) , price: PriceValue});
+    },[TitleValue,PriceValue]);
+
+
+    //------------------------------------------------------------------------
+
+
+
 
     return (
         <div style={{ maxWidth: '700px', margin: '2rem auto' }}>
@@ -89,11 +234,17 @@ function UploadProductPage(props) {
             </div>
 
 
-            <Form onSubmit={onSubmit} >
+            <Form onSubmit={onSubmit}>
 
                 {/* DropZone */}
                 <FileUpload refreshFunction={updateImages} style={{ textAlign: 'center'}}/>
 
+                <br />
+                <br />
+                <label>TokenId</label>
+                <Input
+                    value={MyNFTValues.tokenId}
+                />
                 <br />
                 <br />
                 <label>Category</label><br />

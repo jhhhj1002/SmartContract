@@ -9,7 +9,7 @@ contract Auctions {
 	struct Auction {
 	  string name; // 제목
 	  uint256 price; // 가격
-	  string metadata; // 메타데이터 : ipfs hash
+	//   string metadata; // 메타데이터 : ipfs hash
 	  uint256 tokenId; // 토큰 아이디
 	  address repoAddress; // nft 컨트랙트 어드레스
 	  address owner; // 소유자				
@@ -27,12 +27,12 @@ contract Auctions {
 	  _;
 	}
 
-	function createAuction(address _repoAddress, uint256 _tokenId, string _auctionTitle, string _metadata, uint256 _price) public contractIsNFTOwner(_repoAddress, _tokenId) returns(bool) {
+	function createAuction(address _repoAddress, uint256 _tokenId, string _auctionTitle, uint256 _price) public contractIsNFTOwner(_repoAddress, _tokenId) returns(bool) {
 		uint auctionId = auctions.length;
 		Auction memory newAuction;
 		newAuction.name = _auctionTitle;
 		newAuction.price = _price;
-		newAuction.metadata = _metadata;
+		// newAuction.metadata = _metadata;
 		newAuction.tokenId = _tokenId;
 		newAuction.repoAddress = _repoAddress;
 		newAuction.owner = msg.sender;
@@ -78,7 +78,7 @@ contract Auctions {
 	function getAuctionById(uint _auctionId) public constant returns(
 		string name,
 		uint256 price,
-		string metadata,
+		// string metadata,
 		uint256 tokenId,
 		address repoAddress,
 		address owner,
@@ -88,7 +88,7 @@ contract Auctions {
 		return (
 			auc.name,
 			auc.price,
-			auc.metadata,
+			// auc.metadata,
 			auc.tokenId,
 			auc.repoAddress,
 			auc.owner,
