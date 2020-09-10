@@ -22,12 +22,16 @@ contract Auctions {
 	}
 
 	modifier contractIsNFTOwner(address _repoAddress, uint256 _tokenId) {
+	//해당 contract가 특정 nft 소유권을 가지고 있는지 확인하는 modifier
 	  address nftOwner = MyNFT(_repoAddress).ownerOf(_tokenId);
-	  require(nftOwner == address(this));
+	  // import한 MyNFT에 contract address를 넣고, ownerOf(tokenId) 함수로 해당 토큰의 소유자 어드레스를 가져옴
+	  require(nftOwner == address(this)); //require를 통해 일치하면 다음 프로세스 진행
+	  // address(this)는 contract의 address 반환하는 함수
 	  _;
 	}
 
 	function createAuction(address _repoAddress, uint256 _tokenId, string _auctionTitle, uint256 _price) public contractIsNFTOwner(_repoAddress, _tokenId) returns(bool) {
+		// 새 auction을 생성하는 함수
 		uint auctionId = auctions.length;
 		Auction memory newAuction;
 		newAuction.name = _auctionTitle;
@@ -47,8 +51,12 @@ contract Auctions {
 	}
 
 	function finalizeAuction(uint _auctionId, address _to) public {
+		//auction을 소유자에게 전달하는 함수
 		Auction memory myAuction = auctions[_auctionId];
 		if(approveAndTransfer(address(this), _to, myAuction.repoAddress, myAuction.tokenId)){
+			//받는 어드레스에 소유권이 승인되고 전달되는 함수, 여기가 완료되면 해당 옥션의 상태가 종료로 바뀜
+			// @@@@@@@@@@@@@@@@@@@@여기에서 해당 옥션의 가격을 가져오고 이더리움 실제 거래가 되어야 함@@@@@@@@@@@@@@@@@
+			//그 다음 auctionfinalized 이벤트를 송출함
 		    auctions[_auctionId].active = false;
 		    auctions[_auctionId].finalized = true;
 		    emit AuctionFinalized(msg.sender, _auctionId);
@@ -56,7 +64,10 @@ contract Auctions {
 	}
 
 	function approveAndTransfer(address _from, address _to, address _repoAddress, uint256 _tokenId) internal returns(bool) {
+		// internal 함수, 컨트랙트 내부에서만 호출 가능
 		MyNFT remoteContract = MyNFT(_repoAddress);
+		// myNFT 컨트랙트에  컨트랙트 address를 넣고, 인스턴스를 가져온 후, 인스턴스의 approve(_to, _tokenId)를 통해 해당 토큰을 받는 어드레스(_to)를 승인
+		// transferFrom을 통해 해당 어드레스로 전송한다.
 		remoteContract.approve(_to, _tokenId);
 		remoteContract.transferFrom(_from, _to, _tokenId);
 		return true;
@@ -97,5 +108,5 @@ contract Auctions {
 	}
 
 	event AuctionCreated(address _owner, uint _auctionId);
-	event AuctionFinalized(address _owner, uint _auctionId);
+	event AuctionFinalized(address _owner, uint _auctionId); //거래가 끝난 후 송출되는 이벤트
 }
