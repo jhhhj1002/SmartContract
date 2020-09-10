@@ -63,6 +63,22 @@ contract Auctions {
 		}
 	}
 
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@이더리움 payable 함수 추가 (수정필요)@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+   // blockchain에 저장되는 중요 함수.
+    function buyAuction(uint _id, bytes32 _name, uint _age) public payable {
+        // 1. 유효성 체크
+        require(_id >= 0 && _id <= 9); // 매물의 id
+        buyers[_id] = msg.sender;
+        buyerInfo[_id] = Buyer(msg.sender, _name, _age);
+
+        // owner에게 매입가를 전송함.
+        owner.transfer(msg.value); //이게 작동해서 첫번째 계정으로 송금되고, 두번째 계정이 깎임.
+        //emit LogBuyRealEstate(msg.sender, _id);
+
+    }
+
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
 	function approveAndTransfer(address _from, address _to, address _repoAddress, uint256 _tokenId) internal returns(bool) {
 		// internal 함수, 컨트랙트 내부에서만 호출 가능
 		MyNFT remoteContract = MyNFT(_repoAddress);
