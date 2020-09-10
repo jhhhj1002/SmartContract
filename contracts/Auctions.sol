@@ -22,12 +22,16 @@ contract Auctions {
 	}
 
 	modifier contractIsNFTOwner(address _repoAddress, uint256 _tokenId) {
+	//해당 contract가 특정 nft 소유권을 가지고 있는지 확인하는 modifier
 	  address nftOwner = MyNFT(_repoAddress).ownerOf(_tokenId);
-	  require(nftOwner == address(this));
+	  // import한 MyNFT에 contract address를 넣고, ownerOf(tokenId) 함수로 해당 토큰의 소유자 어드레스를 가져옴
+	  require(nftOwner == address(this)); //require를 통해 일치하면 다음 프로세스 진행
+	  // address(this)는 contract의 address 반환하는 함수
 	  _;
 	}
 
 	function createAuction(address _repoAddress, uint256 _tokenId, string _auctionTitle, uint256 _price) public contractIsNFTOwner(_repoAddress, _tokenId) returns(bool) {
+		// 새 auction을 생성하는 함수 (해당 토큰이 )
 		uint auctionId = auctions.length;
 		Auction memory newAuction;
 		newAuction.name = _auctionTitle;
