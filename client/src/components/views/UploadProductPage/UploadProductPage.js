@@ -6,7 +6,8 @@ import Axios from 'axios';
 import Config from '../../Config';
 
 
-// 1. 코드 정리 해야함 -> 지현
+
+// 2. 토큰 중복시 에러처리 방법 생각하기
 
 
 
@@ -34,7 +35,7 @@ function UploadProductPage(props) {
     }
 
     useEffect(() => {
-        setMyNFTValues({account : window.ethereum._state.accounts[0], contractInstance: window.web3.eth.contract(Config.MYNFT_ABI).at(Config.MYNFT_CA),tokenId : getRandomInt(123456789,999999999)});
+        setMyNFTValues({account : window.web3.eth.accounts[0], contractInstance: window.web3.eth.contract(Config.MYNFT_ABI).at(Config.MYNFT_CA),tokenId : getRandomInt(123456789,999999999)});
         setMyAuctionValues({contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA)});
     },[]);
 
@@ -95,13 +96,6 @@ function UploadProductPage(props) {
               console.log("txhash",transactionHash)    
               watchCreated(transactionHash,variables)
           })
-
-        // watchCreated((error, result) => {
-        //   if(!error) {
-        //       alert("Creation completed...!")
-        //       uploadProduct(variables)
-        //     }
-        // })
       }
 
 
@@ -131,13 +125,6 @@ function UploadProductPage(props) {
 
             watchTokenRegistered(result)
             createAuction(variables)
-
-            // watchTokenRegistered((error, result) => {
-            //     if(!error) {
-            //       alert("Token registered...!")
-            //       MyNFTValues.isRegistered = true
-            //     }
-            // })
 
         })
     }
@@ -173,48 +160,6 @@ function UploadProductPage(props) {
     const updateImages = (newImages) => {
         setImages(newImages)
     }
-    // const onSubmit = (event) => {
-    //     event.preventDefault();
-
-
-    //     if (!TitleValue || !DescriptionValue || !PriceValue ||
-    //         !ContinentValue || !Images) {
-    //         return alert('fill all the fields first!')
-    //     }
-
-    //     const variables = {
-    //         writer: props.user.userData._id,
-    //         title: TitleValue,
-    //         description: DescriptionValue,
-    //         price: PriceValue,
-    //         images: Images,
-    //         continents: ContinentValue,
-    //     }
-
-
-
-    //     Axios.post('/api/product/uploadProduct', variables)
-    //         .then(response => {
-    //             if (response.data.success) {
-    //                 Axios.post('/api/users/updateUserUploadInfo', {"productId":response.data.productId}) //내가추가
-    //                 .then(response => {
-    //                     if (response.data.success) {
-    //                             alert('Product Successfully Uploaded')
-    //                                 props.history.push('/')
-    //                             } else {
-    //                                 alert('Failed to upload Product')
-    //                             }
-    //                         })
-    //             } else {
-    //                 alert('Failed to upload Product')
-    //             }
-    //         })
-            
-    // }
-
-
-
-
         //------------------------------------------------------------------------
 
     useEffect(() => {
