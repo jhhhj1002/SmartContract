@@ -6,7 +6,8 @@ import Axios from 'axios';
 import Config from '../../Config';
 
 
-// 1. 코드 정리 해야함 -> 지현
+
+// 2. 토큰 중복시 에러처리 방법 생각하기
 
 
 
@@ -34,7 +35,7 @@ function UploadProductPage(props) {
     }
 
     useEffect(() => {
-        setMyNFTValues({account : window.ethereum._state.accounts[0], contractInstance: window.web3.eth.contract(Config.MYNFT_ABI).at(Config.MYNFT_CA),tokenId : getRandomInt(123456789,999999999)});
+        setMyNFTValues({account : window.web3.eth.accounts[0], contractInstance: window.web3.eth.contract(Config.MYNFT_ABI).at(Config.MYNFT_CA),tokenId : getRandomInt(123456789,999999999)});
         setMyAuctionValues({contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA)});
     },[]);
 
@@ -94,13 +95,6 @@ function UploadProductPage(props) {
               console.log("txhash",transactionHash)    
               watchCreated(transactionHash,variables)
           })
-
-        // watchCreated((error, result) => {
-        //   if(!error) {
-        //       alert("Creation completed...!")
-        //       uploadProduct(variables)
-        //     }
-        // })
       }
       const transferToCA=()=>{
           MyNFTValues.contractInstance.transferFrom(MyNFTValues.account, Config.AUCTIONS_CA, MyNFTValues.tokenId,{
@@ -149,13 +143,6 @@ function UploadProductPage(props) {
             transferToCA()
             createAuction(variables)
 
-            // watchTokenRegistered((error, result) => {
-            //     if(!error) {
-            //       alert("Token registered...!")
-            //       MyNFTValues.isRegistered = true
-            //     }
-            // })
-
         })
     }
 
@@ -191,17 +178,11 @@ function UploadProductPage(props) {
         setImages(newImages)
     }
 
-
-
         //------------------------------------------------------------------------
 
     useEffect(() => {
         setMyAuctionValues({auctionTitle: TitleValue, contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA) , price: PriceValue});
     },[TitleValue,PriceValue]);
-
-
-    //------------------------------------------------------------------------
-
 
 
 
