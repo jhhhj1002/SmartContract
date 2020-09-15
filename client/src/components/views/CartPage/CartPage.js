@@ -105,13 +105,13 @@ function CartPage(props) {
                 }
             var account = accounts[0]
             console.log(account)
-            var too= toString('0xC521A47e59CeB7667c8d0DBbf6d1fD13214f2aCc')
-            MyAuctionValues.contractInstance.finalizeAuction( auctionId, too, {from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
+            var too= props.user.cartDetail[0].writer.wallet
+            MyAuctionValues.contractInstance.finalizeAuction( 3, too, {from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
                 console.log(result)
             })
         })
     }
-
+////////////////////////////////////////////
     return (
         <div style={{ width: '85%', margin: '3rem auto' }}>
             <h1>My Cart</h1>
@@ -158,7 +158,7 @@ function CartPage(props) {
                 <div class="modal fade" tabindex="-1" role="dialog" id="buyModal">
                     <div class="modal-content">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onClick={getAuctionsOf}>구매테스트</button>
+                        <button type="button" class="btn btn-primary" onClick={finalizeAuction}>구매테스트</button>
                     </div>
                     </div>
                 </div>
