@@ -8,6 +8,7 @@ import {
 import UserCardBlock from './Sections/UserCardBlock';
 import { Result, Empty } from 'antd';
 import web3 from 'web3';
+import Config from '../../Config';
 //import Paypal from '../../utils/Paypal';
 
 function CartPage(props) {
@@ -17,10 +18,13 @@ function CartPage(props) {
     const [ShowSuccess, setShowSuccess] = useState(false)
     var Web3 = new web3(web3.givenProvider || 'ws://some.local-or-remote.node:8546')
     //https://web3js.readthedocs.io/en/v1.2.0/web3-eth.html 여기서 web3함수랑 초기설정있음!
+    const [MyAuctionValues, setMyAuctionValues] = useState({ contractInstance: '', productId: '', from: '', to: '', productPrice: '', tokenid:''})
 
+   
     useEffect(() => {
+        setMyAuctionValues({contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA)});
 
-        let cartItems = [];
+      let cartItems = [];
         if (props.user.userData && props.user.userData.cart) {
             if (props.user.userData.cart.length > 0) {
                 props.user.userData.cart.forEach(item => {
@@ -81,48 +85,31 @@ function CartPage(props) {
     const transactionCanceled = () => {
         console.log('Transaction canceled')
     }
-
-    const buyRealEstate = () => {
-        // var id = $('#id').val();
-        // var name = $('#name').val();
-        // var price = $('#price').val();
-        // var age = $('#age').val();
-    
-        // console.log(id);
-        // console.log(price);
-        // console.log(name);
-        // console.log(age);
-
-        //실험용 콘솔 출력
-        Web3.eth.getAccounts()
-        .then(console.log);
-
+////////////////////////////////////////////////
+    //let auctionId = MyAuctionValues.contractInstance.auctionOwner[window.ethereum._state.accounts[0]]
+    var auctionId
+    const getAuctionsOf =()=>{
         Web3.eth.getAccounts(function(error, accounts) {
-          if(error) {
-            console.log('error');
-          }
-          var account = accounts[0];
-          this.RealEstate.deployed().then(function(instance) {
-            // utf8 미리 파일 첨부해둠
+            var account = accounts[0]
 
-            //var nameUtf8Encoded = utf8.encode(name);
-
-
-            // byte type을 hex로 변경
-            // payable함수이기 때문에 ether도 전송해야 한다. 
-            // 어느 계정에서 이 함수를 가져온지도 명시 해야 한다. from : account
-            // 계정정보 호출은 web3로 해야한다. 
-            return instance.buyRealEstate(0, Web3, 0, { from: account, value: 0 }); 
-          }).then(function(){
-            // input clear 확인
-            // $('#name').val('');
-            // $('#age').val('');
-            // $('#buyModal').modal('hide');
-            //return App.loadRealEstates(); 
-          }).catch(function(err) {
-            console.log(err.message);
-          });
-        });
+        MyAuctionValues.contractInstance.getAuctionsOf(account, {from:account, gas: Config.GAS_AMOUNT}, (error, result) => {
+            auctionId = result
+        })
+        console.log("auctionid = ", auctionId)
+    })
+    }
+    const finalizeAuction = () =>{
+        Web3.eth.getAccounts(function(error, accounts) {
+               if(error) {
+                    console.log('error');
+                }
+            var account = accounts[0]
+            console.log(account)
+            var too= toString('0xC521A47e59CeB7667c8d0DBbf6d1fD13214f2aCc')
+            MyAuctionValues.contractInstance.finalizeAuction( auctionId, too, {from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
+                console.log(result)
+            })
+        })
     }
 
     return (
@@ -171,7 +158,7 @@ function CartPage(props) {
                 <div class="modal fade" tabindex="-1" role="dialog" id="buyModal">
                     <div class="modal-content">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onClick={buyRealEstate}>제출</button>
+                        <button type="button" class="btn btn-primary" onClick={getAuctionsOf}>구매테스트</button>
                     </div>
                     </div>
                 </div>

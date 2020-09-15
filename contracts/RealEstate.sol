@@ -1,6 +1,7 @@
-pragma solidity ^0.4.23;
+pragma solidity  >=0.4.21;
 
 contract RealEstate {
+    //매입자의정보
     struct Buyer {
         address buyerAddress;
         bytes32 name;

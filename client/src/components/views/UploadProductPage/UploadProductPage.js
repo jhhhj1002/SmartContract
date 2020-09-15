@@ -115,6 +115,7 @@ function UploadProductPage(props) {
 
         const variables = {
             tokenId : MyNFTValues.tokenId,
+            auctionId : MyAuctionValues.auctionId,
             writer: props.user.userData._id,
             title: TitleValue,
             description: DescriptionValue,
@@ -244,6 +245,11 @@ function UploadProductPage(props) {
                 <label>TokenId</label>
                 <Input
                     value={MyNFTValues.tokenId}
+                />
+                <br />
+                <label>auctionId</label>
+                <Input
+                    value={MyNFTValues.auctionId}
                 />
                 <br />
                 <br />
