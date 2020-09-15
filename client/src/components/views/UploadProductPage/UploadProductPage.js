@@ -89,7 +89,6 @@ function UploadProductPage(props) {
 
 
       const createAuction = (variables) => {     
-  
         const price = window.web3.toWei(MyAuctionValues.price, 'ether')
         MyAuctionValues.contractInstance.createAuction(Config.MYNFT_CA, MyNFTValues.tokenId, MyAuctionValues.auctionTitle, price, {from: MyNFTValues.account, gas: Config.GAS_AMOUNT}, (error, transactionHash) => {     
               console.log("txhash",transactionHash)    
@@ -103,8 +102,24 @@ function UploadProductPage(props) {
         //     }
         // })
       }
+      const transferToCA=()=>{
+          MyNFTValues.contractInstance.transferFrom(MyNFTValues.account, Config.AUCTIONS_CA, MyNFTValues.tokenId,{
+              from: MyNFTValues.account,
+              gas: Config.GAS_AMOUNT
+          },(err, result)=>{
+              console.log("result", result)
+          })
+          watchTransfered((err, result) => {
+              if(!err) alert("token transgered to CA!")
+          })
+      }
 
-
+    const watchTransfered =(cb)=>{
+        const currentBlock =  getCurrentBlock()
+        const eventWatcher = MyNFTValues.contractInstance.Transfer({},
+            {from: currentBlock-1, toBlock: 'latest'})
+            eventWatcher.watch(cb)
+    }
 
     const onSubmit = (event) => {
         event.preventDefault();
@@ -131,6 +146,7 @@ function UploadProductPage(props) {
             console.log("result",result)   
 
             watchTokenRegistered(result)
+            transferToCA()
             createAuction(variables)
 
             // watchTokenRegistered((error, result) => {
@@ -174,45 +190,6 @@ function UploadProductPage(props) {
     const updateImages = (newImages) => {
         setImages(newImages)
     }
-    // const onSubmit = (event) => {
-    //     event.preventDefault();
-
-
-    //     if (!TitleValue || !DescriptionValue || !PriceValue ||
-    //         !ContinentValue || !Images) {
-    //         return alert('fill all the fields first!')
-    //     }
-
-    //     const variables = {
-    //         writer: props.user.userData._id,
-    //         title: TitleValue,
-    //         description: DescriptionValue,
-    //         price: PriceValue,
-    //         images: Images,
-    //         continents: ContinentValue,
-    //     }
-
-
-
-    //     Axios.post('/api/product/uploadProduct', variables)
-    //         .then(response => {
-    //             if (response.data.success) {
-    //                 Axios.post('/api/users/updateUserUploadInfo', {"productId":response.data.productId}) //내가추가
-    //                 .then(response => {
-    //                     if (response.data.success) {
-    //                             alert('Product Successfully Uploaded')
-    //                                 props.history.push('/')
-    //                             } else {
-    //                                 alert('Failed to upload Product')
-    //                             }
-    //                         })
-    //             } else {
-    //                 alert('Failed to upload Product')
-    //             }
-    //         })
-            
-    // }
-
 
 
 
