@@ -90,15 +90,30 @@ function UploadProductPage(props) {
 
 
       const createAuction = (variables) => {     
-  
         const price = window.web3.toWei(MyAuctionValues.price, 'ether')
         MyAuctionValues.contractInstance.createAuction(Config.MYNFT_CA, MyNFTValues.tokenId, MyAuctionValues.auctionTitle, price, {from: MyNFTValues.account, gas: Config.GAS_AMOUNT}, (error, transactionHash) => {     
               console.log("txhash",transactionHash)    
               watchCreated(transactionHash,variables)
           })
       }
+      const transferToCA=()=>{
+          MyNFTValues.contractInstance.transferFrom(MyNFTValues.account, Config.AUCTIONS_CA, MyNFTValues.tokenId,{
+              from: MyNFTValues.account,
+              gas: Config.GAS_AMOUNT
+          },(err, result)=>{
+              console.log("result", result)
+          })
+          watchTransfered((err, result) => {
+              if(!err) alert("token transgered to CA!")
+          })
+      }
 
-
+    const watchTransfered =(cb)=>{
+        const currentBlock =  getCurrentBlock()
+        const eventWatcher = MyNFTValues.contractInstance.Transfer({},
+            {from: currentBlock-1, toBlock: 'latest'})
+            eventWatcher.watch(cb)
+    }
 
     const onSubmit = (event) => {
         event.preventDefault();
@@ -109,6 +124,7 @@ function UploadProductPage(props) {
 
         const variables = {
             tokenId : MyNFTValues.tokenId,
+            auctionId : MyAuctionValues.auctionId,
             writer: props.user.userData._id,
             title: TitleValue,
             description: DescriptionValue,
@@ -124,6 +140,7 @@ function UploadProductPage(props) {
             console.log("result",result)   
 
             watchTokenRegistered(result)
+            transferToCA()
             createAuction(variables)
 
         })
@@ -160,15 +177,12 @@ function UploadProductPage(props) {
     const updateImages = (newImages) => {
         setImages(newImages)
     }
+
         //------------------------------------------------------------------------
 
     useEffect(() => {
         setMyAuctionValues({auctionTitle: TitleValue, contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA) , price: PriceValue});
     },[TitleValue,PriceValue]);
-
-
-    //------------------------------------------------------------------------
-
 
 
 
@@ -189,6 +203,11 @@ function UploadProductPage(props) {
                 <label>TokenId</label>
                 <Input
                     value={MyNFTValues.tokenId}
+                />
+                <br />
+                <label>auctionId</label>
+                <Input
+                    value={MyNFTValues.auctionId}
                 />
                 <br />
                 <br />
