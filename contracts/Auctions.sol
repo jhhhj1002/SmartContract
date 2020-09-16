@@ -56,6 +56,7 @@ contract Auctions {
 		if(approveAndTransfer(address(this), _to, myAuction.repoAddress, myAuction.tokenId)){
 			//받는 어드레스에 소유권이 승인되고 전달되는 함수, 여기가 완료되면 해당 옥션의 상태가 종료로 바뀜
 			// @@@@@@@@@@@@@@@@@@@@여기에서 해당 옥션의 가격을 가져오고 이더리움 실제 거래가 되어야 함@@@@@@@@@@@@@@@@@
+			buyAuction(_auctionId, _to);
 			//그 다음 auctionfinalized 이벤트를 송출함
 		    auctions[_auctionId].active = false;
 		    auctions[_auctionId].finalized = true;
