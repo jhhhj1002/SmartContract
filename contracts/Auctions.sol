@@ -12,7 +12,7 @@ contract Auctions {
 	//   string metadata; // 메타데이터 : ipfs hash
 	  uint256 tokenId; // 토큰 아이디
 	  address repoAddress; // nft 컨트랙트 어드레스
-	  address owner; // 소유자				
+	  address owner; // 소유자	(옥션 소유자)			
 	  bool active; //활성화 여부
 	  bool finalized; //판매 종료여부
 	}
