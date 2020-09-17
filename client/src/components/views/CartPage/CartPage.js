@@ -155,6 +155,10 @@ function CartPage(props) {
                     data-target="#buyModal">
                     구매
                 </button>
+
+                <button type="button" onclick={finalizeAuction}>채연 테스트 결제 버튼</button>
+
+
                 <div class="modal fade" tabindex="-1" role="dialog" id="buyModal">
                     <div class="modal-content">
                     <div class="modal-footer">

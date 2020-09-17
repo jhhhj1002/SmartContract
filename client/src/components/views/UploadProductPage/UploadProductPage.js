@@ -39,6 +39,8 @@ function UploadProductPage(props) {
         setMyAuctionValues({contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA)});
     },[]);
 
+    console.log(window.web3.eth.accounts[0])
+    console.log(MyNFTValues)
 
     const uploadProduct = (variables) =>{
         Axios.post('/api/product/uploadProduct', variables)
@@ -124,7 +126,6 @@ function UploadProductPage(props) {
 
         const variables = {
             tokenId : MyNFTValues.tokenId,
-            auctionId : MyAuctionValues.auctionId,
             writer: props.user.userData._id,
             title: TitleValue,
             description: DescriptionValue,
@@ -132,6 +133,7 @@ function UploadProductPage(props) {
             images: Images,
             continents: ContinentValue,
         }
+        console.log(MyNFTValues)
 
         MyNFTValues.contractInstance.registerUniqueToken(MyNFTValues.account, MyNFTValues.tokenId, {
             from: MyNFTValues.account,
@@ -203,11 +205,6 @@ function UploadProductPage(props) {
                 <label>TokenId</label>
                 <Input
                     value={MyNFTValues.tokenId}
-                />
-                <br />
-                <label>auctionId</label>
-                <Input
-                    value={MyNFTValues.auctionId}
                 />
                 <br />
                 <br />
