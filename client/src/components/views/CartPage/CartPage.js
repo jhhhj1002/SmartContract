@@ -108,6 +108,7 @@ function CartPage(props) {
             var too= props.user.cartDetail[0].writer.wallet
             MyAuctionValues.contractInstance.finalizeAuction( 3, too, {from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
                 console.log(result)
+            
             })
         })
     }
@@ -156,7 +157,7 @@ function CartPage(props) {
                     구매
                 </button>
 
-                <button type="button" onclick={finalizeAuction}>채연 테스트 결제 버튼</button>
+                <button type="button" onClick={finalizeAuction}>채연</button>
 
 
                 <div class="modal fade" tabindex="-1" role="dialog" id="buyModal">
