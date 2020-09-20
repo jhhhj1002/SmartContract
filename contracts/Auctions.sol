@@ -1,11 +1,16 @@
-pragma solidity  >=0.4.21;
+pragma solidity ^0.4.23;
 
 import "./MyNFT.sol";
 
 contract Auctions {
+<<<<<<< HEAD
 	Auction[] public auctions;		//옥션을 저장하는 배열
  	mapping(address => uint[]) public auctionOwner; 	//소유자 어드레스가 가지고 있는 토큰id
     address public my_addr;
+=======
+	Auction[] public auctions;
+ 	mapping(address => uint[]) public auctionOwner;
+>>>>>>> 5c6f024b440cde084dba49fa52ce160d9cf33f2f
 
 	struct Auction {
 	  string name; // 제목
@@ -13,10 +18,9 @@ contract Auctions {
 	//   string metadata; // 메타데이터 : ipfs hash
 	  uint256 tokenId; // 토큰 아이디
 	  address repoAddress; // nft 컨트랙트 어드레스
-	  address owner; // 소유자				
+	  address owner; // 소유자	(옥션 소유자)			
 	  bool active; //활성화 여부
 	  bool finalized; //판매 종료여부
-	  uint256 auctionId;
 	}
 	constructor() public {
 			my_addr = msg.sender; // 현재 생성한 계정값.(주소형), 이 컨트랙의 주인은 현재 배포 계정이다. 라는 뜻.
@@ -50,7 +54,6 @@ contract Auctions {
 		newAuction.owner = msg.sender;
 		newAuction.active = true;
         newAuction.finalized = false;
-		newAuction.auctionId = auctionId;
 
 		auctions.push(newAuction);
 		auctionOwner[msg.sender].push(auctionId);
@@ -59,12 +62,13 @@ contract Auctions {
 		return true;
 	}
 
-	function finalizeAuction(uint _auctionId, address _to) public {
+	function finalizeAuction(uint _auctionId, address _to) public payable {
 		//auction을 소유자에게 전달하는 함수
 		Auction memory myAuction = auctions[_auctionId];
 		if(approveAndTransfer(address(this), _to, myAuction.repoAddress, myAuction.tokenId)){
 			//받는 어드레스에 소유권이 승인되고 전달되는 함수, 여기가 완료되면 해당 옥션의 상태가 종료로 바뀜
 			// @@@@@@@@@@@@@@@@@@@@여기에서 해당 옥션의 가격을 가져오고 이더리움 실제 거래가 되어야 함@@@@@@@@@@@@@@@@@
+			buyAuction(_auctionId, _to);
 			//그 다음 auctionfinalized 이벤트를 송출함
 		    auctions[_auctionId].active = false;
 		    auctions[_auctionId].finalized = true;
@@ -75,9 +79,26 @@ contract Auctions {
 		//옥션 소유자를 구매자 주소로 넣음
 		//auctions[_auctionId].owner = msg.sender;
 	}
+//***************************** 채연 테스트 함수 */
+	function testFinalizeAuction(uint _auctionId, address _to) public {
+		//auction을 소유자에게 전달하는 함수
+		Auction memory myAuction = auctions[_auctionId];
+		if(approveAndTransfer(address(this), _to, myAuction.repoAddress, myAuction.tokenId)){
+			//받는 어드레스에 소유권이 승인되고 전달되는 함수, 여기가 완료되면 해당 옥션의 상태가 종료로 바뀜
+			// @@@@@@@@@@@@@@@@@@@@여기에서 해당 옥션의 가격을 가져오고 이더리움 실제 거래가 되어야 함@@@@@@@@@@@@@@@@@
+			buyAuction(_auctionId, _to);
+			//그 다음 auctionfinalized 이벤트를 송출함
+		    auctions[_auctionId].active = false;
+		    auctions[_auctionId].finalized = true;
+		    emit AuctionFinalized(msg.sender, _auctionId);
+		}
+	}
+//***************************** 채연 테스트 함수 */
+
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@이더리움 payable 함수 추가 (수정필요)@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+<<<<<<< HEAD
 //    // blockchain에 저장되는 중요 함수.
     function buyAuction(address _to, uint _price) public payable {
         // 1. 유효성 체크
@@ -90,13 +111,42 @@ contract Auctions {
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
 	function approveAndTransfer(address _from, address _to, address _repoAddress, uint256 _tokenId) internal returns(bool) {
+=======
+   // blockchain에 저장되는 중요 함수.
+    function buyAuction(uint _auctionId, address _to) public payable {
+		// owner = auction을 올린 계정
+        _auctionId = msg.sender;
+        // owner에게 매입가를 전송함.
+        _to.transfer(3); //이게 작동해서 첫번째 계정으로 송금되고, 두번째 계정이 깎임.
+        //emit LogBuyRealEstate(msg.sender, _id);
+
+    }
+
+   // blockchain에 저장되는 중요 함수.
+    function buyAuction22222() public payable {
+        // 1. 유효성 체크
+        buyers[_id] = msg.sender;
+        buyerInfo[_id] = Buyer(msg.sender, _name, _age);
+
+        // owner에게 매입가를 전송함.
+        owner.transfer(msg.value); //이게 작동해서 첫번째 계정으로 송금되고, 두번째 계정이 깎임.
+        //emit LogBuyRealEstate(msg.sender, _id);
+
+    }
+
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
+	function approveAndTransfer(address _from, address _to, address _repoAddress, uint256 _tokenId) internal returns(bool)  {
+>>>>>>> 5c6f024b440cde084dba49fa52ce160d9cf33f2f
 		// internal 함수, 컨트랙트 내부에서만 호출 가능
 		MyNFT remoteContract = MyNFT(_repoAddress);
 		// myNFT 컨트랙트에  컨트랙트 address를 넣고, 인스턴스를 가져온 후, 인스턴스의 approve(_to, _tokenId)를 통해 해당 토큰을 받는 어드레스(_to)를 승인
 		// transferFrom을 통해 해당 어드레스로 전송한다.
 		remoteContract.approve(_to, _tokenId);
 		remoteContract.transferFrom(_from, _to, _tokenId);
+<<<<<<< HEAD
 		//remoteContract.transferFrom(_from, _to, _price);
+=======
+>>>>>>> 5c6f024b440cde084dba49fa52ce160d9cf33f2f
 		return true;
 	}
 
