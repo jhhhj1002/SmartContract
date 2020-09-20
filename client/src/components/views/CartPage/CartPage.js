@@ -88,6 +88,7 @@ function CartPage(props) {
 ////////////////////////////////////////////////
     //let auctionId = MyAuctionValues.contractInstance.auctionOwner[window.ethereum._state.accounts[0]]
     var auctionId
+
     const getAuctionsOf =()=>{
         Web3.eth.getAccounts(function(error, accounts) {
             var account = accounts[0]
@@ -98,6 +99,7 @@ function CartPage(props) {
         console.log("auctionid = ", auctionId)
     })
     }
+
     const finalizeAuction = () =>{
         Web3.eth.getAccounts(function(error, accounts) {
                if(error) {
@@ -106,12 +108,30 @@ function CartPage(props) {
             var account = accounts[0]
             console.log(account)
             var too= props.user.cartDetail[0].writer.wallet
-            MyAuctionValues.contractInstance.finalizeAuction( 3, too, {from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
+            MyAuctionValues.contractInstance.finalizeAuction( 0, too, {from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
                 console.log(result)
+            })
+            // MyAuctionValues.contractInstance.buyAuction(too, props.user.cartDetail[0].price,{from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
+            //          console.log(result)
+            //      })
+           // console.log(MyAuctionValues.contractInstance.getAuctionById(0))
+        })
+    }
+    const buyAuction = () =>{
+        Web3.eth.getAccounts(function(error, accounts) {
+               if(error) {
+                    console.log('error');
+                }
+            var account = accounts[0]
+            console.log(account)
+            var too= props.user.cartDetail[0].writer.wallet
+
+            MyAuctionValues.contractInstance.buyAuction(too, props.user.cartDetail[0].price,{from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
+                     console.log(result)
             })
         })
     }
-////////////////////////////////////////////
+
     return (
         <div style={{ width: '85%', margin: '3rem auto' }}>
             <h1>My Cart</h1>
@@ -158,7 +178,7 @@ function CartPage(props) {
                 <div class="modal fade" tabindex="-1" role="dialog" id="buyModal">
                     <div class="modal-content">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onClick={finalizeAuction}>구매테스트</button>
+                        <button type="button" class="btn btn-primary" onClick={buyAuction}>구매테스트</button>
                     </div>
                     </div>
                 </div>

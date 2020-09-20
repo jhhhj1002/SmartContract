@@ -5,6 +5,7 @@ import "./MyNFT.sol";
 contract Auctions {
 	Auction[] public auctions;		//옥션을 저장하는 배열
  	mapping(address => uint[]) public auctionOwner; 	//소유자 어드레스가 가지고 있는 토큰id
+    address public my_addr;
 
 	struct Auction {
 	  string name; // 제목
@@ -17,6 +18,12 @@ contract Auctions {
 	  bool finalized; //판매 종료여부
 	  uint256 auctionId;
 	}
+	constructor() public {
+			my_addr = msg.sender; // 현재 생성한 계정값.(주소형), 이 컨트랙의 주인은 현재 배포 계정이다. 라는 뜻.
+		}
+	function getBalance() public view returns (uint256) {
+		return my_addr.balance;
+		}
 
 	function() public {
 	  revert();
@@ -55,7 +62,7 @@ contract Auctions {
 	function finalizeAuction(uint _auctionId, address _to) public {
 		//auction을 소유자에게 전달하는 함수
 		Auction memory myAuction = auctions[_auctionId];
-		if(approveAndTransfer(address(this), _to, myAuction.repoAddress, myAuction.tokenId, myAuction.price)){
+		if(approveAndTransfer(address(this), _to, myAuction.repoAddress, myAuction.tokenId)){
 			//받는 어드레스에 소유권이 승인되고 전달되는 함수, 여기가 완료되면 해당 옥션의 상태가 종료로 바뀜
 			// @@@@@@@@@@@@@@@@@@@@여기에서 해당 옥션의 가격을 가져오고 이더리움 실제 거래가 되어야 함@@@@@@@@@@@@@@@@@
 			//그 다음 auctionfinalized 이벤트를 송출함
@@ -63,32 +70,33 @@ contract Auctions {
 		    auctions[_auctionId].finalized = true;
 		    emit AuctionFinalized(msg.sender, _auctionId);
 		}
+		buyAuction(_to, myAuction.price);
+		emit AuctionPayed(msg.sender, myAuction.owner, myAuction.price);
+		//옥션 소유자를 구매자 주소로 넣음
+		//auctions[_auctionId].owner = msg.sender;
 	}
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@이더리움 payable 함수 추가 (수정필요)@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 //    // blockchain에 저장되는 중요 함수.
-//     function buyAuction(uint _id, bytes32 _name, uint _age) public payable {
-//         // 1. 유효성 체크
-//         require(_id >= 0 && _id <= 9); // 매물의 id
-//         buyers[_id] = msg.sender;
-//         buyerInfo[_id] = Buyer(msg.sender, _name, _age);
+    function buyAuction(address _to, uint _price) public payable {
+        // 1. 유효성 체크
+        //require(getBalance() >= _price);
+        // owner에게 매입가를 전송함.
+        _to.transfer(_price); //이게 작동해서 첫번째 계정으로 송금되고, 두번째 계정이 깎임.
+        //emit LogBuyRealEstate(msg.sender, _id);
 
-//         // owner에게 매입가를 전송함.
-//         owner.transfer(msg.value); //이게 작동해서 첫번째 계정으로 송금되고, 두번째 계정이 깎임.
-//         //emit LogBuyRealEstate(msg.sender, _id);
-
-//     } 
+    } 
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
-	function approveAndTransfer(address _from, address _to, address _repoAddress, uint256 _tokenId, uint256 _price) internal returns(bool) {
+	function approveAndTransfer(address _from, address _to, address _repoAddress, uint256 _tokenId) internal returns(bool) {
 		// internal 함수, 컨트랙트 내부에서만 호출 가능
 		MyNFT remoteContract = MyNFT(_repoAddress);
 		// myNFT 컨트랙트에  컨트랙트 address를 넣고, 인스턴스를 가져온 후, 인스턴스의 approve(_to, _tokenId)를 통해 해당 토큰을 받는 어드레스(_to)를 승인
 		// transferFrom을 통해 해당 어드레스로 전송한다.
 		remoteContract.approve(_to, _tokenId);
 		remoteContract.transferFrom(_from, _to, _tokenId);
-		remoteContract.transferFrom(_from, _to, _price);
+		//remoteContract.transferFrom(_from, _to, _price);
 		return true;
 	}
 
@@ -126,6 +134,7 @@ contract Auctions {
 			auc.finalized);
 	}
 
+	event AuctionPayed(address buyer, address seller, uint _price);
 	event AuctionCreated(address _owner, uint _auctionId);
 	event AuctionFinalized(address _owner, uint _auctionId); //거래가 끝난 후 송출되는 이벤트
 }
