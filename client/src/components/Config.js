@@ -7,12 +7,12 @@ const Auctions = require('../contracts/Auctions')
 const RealEstate = require('../contracts/RealEstate.json')
 
 export default {
-	MYNFT_CA: '0x3b2aD63275b7EF7e3fd7EDa8B7fEEB492E19F472',//migrate할 때 주소 (사람마다 다시 할 때마다 다름)
-	AUCTIONS_CA: '0xedAf24523E3b7f5bf92289e6C21fff4406265aCE',
+	MYNFT_CA: '0x8207Dc01Aa513973fd58954510A4473bf2C105e7',//migrate할 때 주소 (사람마다 다시 할 때마다 다름)
+	AUCTIONS_CA: '0x3C9015168E1bfd6C128750c647d2945c953de9a4',
 	REALSTATE_CA: '',
 	
 	MYNFT_ABI: MyNFT.abi,
 	AUCTIONS_ABI: Auctions.abi,
 	REALESTATE_ABI: RealEstate.abi,
-	GAS_AMOUNT: 500000
+	GAS_AMOUNT: 300000
 }
