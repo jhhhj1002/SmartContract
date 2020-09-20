@@ -64,13 +64,13 @@ contract Auctions {
 		}
 	}
 //***************************** 채연 테스트 함수 */
-	function testFinalizeAuction(uint _auctionId, address _to) public {
+	function testFinalizeAuction(uint _auctionId, address _to, uint price) public payable{
 		//auction을 소유자에게 전달하는 함수
 		Auction memory myAuction = auctions[_auctionId];
 		if(approveAndTransfer(address(this), _to, myAuction.repoAddress, myAuction.tokenId)){
 			//받는 어드레스에 소유권이 승인되고 전달되는 함수, 여기가 완료되면 해당 옥션의 상태가 종료로 바뀜
 			// @@@@@@@@@@@@@@@@@@@@여기에서 해당 옥션의 가격을 가져오고 이더리움 실제 거래가 되어야 함@@@@@@@@@@@@@@@@@
-			buyAuction(_auctionId, _to);
+			_to.transfer(price);
 			//그 다음 auctionfinalized 이벤트를 송출함
 		    auctions[_auctionId].active = false;
 		    auctions[_auctionId].finalized = true;
@@ -79,30 +79,17 @@ contract Auctions {
 	}
 //***************************** 채연 테스트 함수 */
 
-
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@이더리움 payable 함수 추가 (수정필요)@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
    // blockchain에 저장되는 중요 함수.
     function buyAuction(uint _auctionId, address _to) public payable {
 		// owner = auction을 올린 계정
-        _auctionId = msg.sender;
+        // _auctionId = msg.sender;
         // owner에게 매입가를 전송함.
         _to.transfer(3); //이게 작동해서 첫번째 계정으로 송금되고, 두번째 계정이 깎임.
         //emit LogBuyRealEstate(msg.sender, _id);
 
     }
 
-   // blockchain에 저장되는 중요 함수.
-    function buyAuction22222() public payable {
-        // 1. 유효성 체크
-        buyers[_id] = msg.sender;
-        buyerInfo[_id] = Buyer(msg.sender, _name, _age);
 
-        // owner에게 매입가를 전송함.
-        owner.transfer(msg.value); //이게 작동해서 첫번째 계정으로 송금되고, 두번째 계정이 깎임.
-        //emit LogBuyRealEstate(msg.sender, _id);
-
-    }
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
 	function approveAndTransfer(address _from, address _to, address _repoAddress, uint256 _tokenId) internal returns(bool)  {
