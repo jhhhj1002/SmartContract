@@ -13,6 +13,8 @@ import Config from '../../Config';
 
 //import Paypal from '../../utils/Paypal';
 
+
+
 function CartPage(props) {
     const dispatch = useDispatch();
     const [Total, setTotal] = useState(0)
@@ -23,12 +25,11 @@ function CartPage(props) {
     const [MyAuctionValues, setMyAuctionValues] = useState({ contractInstance: '', productId: '', from: '', to: '', productPrice: '', tokenid:''})
     let auc_id=[];
 
-<<<<<<< HEAD
+    const[cyContract] = useState({contractInstance: ''})
+
    
 
 
-=======
->>>>>>> 30c425c5a9f2664f20d12afd488ad10f44c585a6
     useEffect(() => {
         setMyAuctionValues({contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA)});
 
@@ -129,40 +130,39 @@ function CartPage(props) {
                 }
             var account = accounts[0]
             console.log(account)
-            var too= props.user.cartDetail[0].writer.wallet
+            // var too= props.user.cartDetail[0].writer.wallet
+            var too = accounts[1]
             console.log("to", too)
-            get_auc_id()
-            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
-                console.log(result)
+
             
-            })
+            // MyAuctionValues.contractInstance.buyAuction({})
+
+            // get_auc_id()
+            
+            // MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
+            //     console.log(result)
+            
+            // })
+
             // MyAuctionValues.contractInstance.buyAuction(too, props.user.cartDetail[0].price,{from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
             //          console.log(result)
             //      })
            // console.log(MyAuctionValues.contractInstance.getAuctionById(0))
         })
     }
-<<<<<<< HEAD
-////////////////////////////////////////////
+// <<<<<<< HEAD
+// ////////////////////////////////////////////
 
-const testFinalizeAuction = () =>{
-    Web3.eth.getAccounts(function(error, accounts) {
-           if(error) {
-                console.log('error');
-            }
-        var account = accounts[0]
-        console.log(account)
-        var too= props.user.cartDetail[0].writer.wallet
-        MyAuctionValues.contractInstance.testFinalizeAuction( too, {from: account, gas: Config.GAS_AMOUNT},  3,(error, result) => {
-            console.log(result)
-        
-        })
-    })
-}
+// const testFinalizeAuction = () =>{
+//     MyAuctionValues.contractInstance.buyAuction( {from: account, gas: Config.GAS_AMOUNT},(error, result) => {
+//         console.log(result)
+//     });
+
+// }
 
 
 
-=======
+
     const buyAuction = () =>{
         Web3.eth.getAccounts(function(error, accounts) {
                if(error) {
@@ -172,12 +172,12 @@ const testFinalizeAuction = () =>{
             console.log(account)
             var too= props.user.cartDetail[0].writer.wallet
             console.log("to", too)
-            MyAuctionValues.contractInstance.buyAuction(too, props.user.cartDetail[0].price,{from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
+            MyAuctionValues.contractInstance.buyAuction({from: account}, (error, result) => {
                      console.log(result)
             })
         })
     }
->>>>>>> 30c425c5a9f2664f20d12afd488ad10f44c585a6
+// >>>>>>> 30c425c5a9f2664f20d12afd488ad10f44c585a6
 
     return (
         <div style={{ width: '85%', margin: '3rem auto' }}>
@@ -239,7 +239,7 @@ const testFinalizeAuction = () =>{
                     구매
                 </button>
 
-                <button type="button" onClick={testFinalizeAuction} value={Total}>채연</button>
+                <button type="button" onClick={buyAuction}>채연</button>
 
 
                 <div class="modal fade" tabindex="-1" role="dialog" id="buyModal">
