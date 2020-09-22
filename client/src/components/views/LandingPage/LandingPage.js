@@ -7,7 +7,19 @@ import RadioBox from './Sections/RadioBox';
 import { continents, price } from './Sections/Datas';
 import SearchFeature from './Sections/SearchFeature';
 
+
+
+import Config from '../../Config';
+import Web3 from 'web3';
+
 const { Meta } = Card;
+
+
+// 1. 전체 토큰 아이디 가져오기 
+// 2. active  = true 인것만 가지고 오기
+// 3. search 나 체크박스 시에도 적용되게 바꾸기
+
+
 
 function LandingPage() {
 
@@ -22,14 +34,50 @@ function LandingPage() {
         price: []
     })
 
+
+    //---------------------
+
+    const [MyNFTValues, setMyNFTValues] = useState({ account: '', contractInstance: '',tokenId: '',isRegistered: false})
+    const [MyAuctionValues, setMyAuctionValues] = useState({ contractInstance: ''})
+
+    const getCurrentBlock= () => {
+        return new Promise((resolve, reject ) => {
+            window.web3.eth.getBlockNumber((err, blocknumber) => {
+              if(!err) resolve(blocknumber)
+              reject(err)
+          })
+        })
+      }
+
     useEffect(() => {
+        setMyNFTValues({account : window.web3.eth.accounts[0], contractInstance: window.web3.eth.contract(Config.MYNFT_ABI).at(Config.MYNFT_CA)});
+        setMyAuctionValues({contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA)});
+        // var web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545/'));
+
+        // const rtn = window.web3.eth.getBlockNumber(console.log)
+        // // const rtn = window.web3.eth.getBlockNumber;
+        // console.log(rtn)
+        // window.web3.eth.getBlockNumber(function(err,rtn) {
+        //     var latest_block_number =  rtn;
+        //     for(var i=0; i <= latest_block_number; i++){
+        //         window.web3.eth.getBlock(i, false, function(err, block) {
+        //             // console.log(block.transactions[0]);
+        //             console.log(block);
+        //             // console.log(web3.eth.getTransactionReceipt(block.transactions[0]));
+        //         });
+        //     }
+        // });
+
+
+  //---------------------
 
         const variables = {
             skip: Skip,
             limit: Limit,
         }
 
-        getProducts(variables)
+        // getActiveProducts(variables) // 내가 츄갸
+        getProducts(variables) // 기존 
 
     }, [])
 

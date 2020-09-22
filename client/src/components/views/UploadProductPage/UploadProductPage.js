@@ -6,7 +6,7 @@ import Axios from 'axios';
 import Config from '../../Config';
 
 
-
+import Web3 from 'web3';
 // 2. 토큰 중복시 에러처리 방법 생각하기
 
 
@@ -30,16 +30,18 @@ function UploadProductPage(props) {
     const [MyNFTValues, setMyNFTValues] = useState({ account: '', contractInstance: '',tokenId: '',isRegistered: false})
     const [MyAuctionValues, setMyAuctionValues] = useState({ auctionTitle: '', contractInstance: '', price: ''})
 
+    const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545/')); // 가나슈 서버 포트
+    
     const getRandomInt = (min, max) => {
         return Math.floor(Math.random() * (max - min + 1)) + min
     }
 
     useEffect(() => {
-        setMyNFTValues({account : window.web3.eth.accounts[0], contractInstance: window.web3.eth.contract(Config.MYNFT_ABI).at(Config.MYNFT_CA),tokenId : getRandomInt(123456789,999999999)});
+        // var web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545/')); // 가나슈 서버 포트
+        setMyNFTValues({account : web3.eth.accounts[0], contractInstance: window.web3.eth.contract(Config.MYNFT_ABI).at(Config.MYNFT_CA),tokenId : getRandomInt(123456789,999999999)});
         setMyAuctionValues({contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA)});
     },[]);
 
-    console.log(window.web3.eth.accounts[0])
     console.log(MyNFTValues)
 
     const uploadProduct = (variables) =>{
@@ -132,6 +134,7 @@ function UploadProductPage(props) {
             price: PriceValue,
             images: Images,
             continents: ContinentValue,
+            active : true
         }
         console.log(MyNFTValues)
 
