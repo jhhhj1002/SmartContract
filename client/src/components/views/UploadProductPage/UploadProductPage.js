@@ -38,7 +38,7 @@ function UploadProductPage(props) {
 
     useEffect(() => {
         // var web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545/')); // 가나슈 서버 포트
-        setMyNFTValues({account : web3.eth.accounts[0], contractInstance: window.web3.eth.contract(Config.MYNFT_ABI).at(Config.MYNFT_CA),tokenId : getRandomInt(123456789,999999999)});
+        setMyNFTValues({account : window.web3.eth.accounts[0], contractInstance: window.web3.eth.contract(Config.MYNFT_ABI).at(Config.MYNFT_CA),tokenId : getRandomInt(123456789,999999999)});
         setMyAuctionValues({contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA)});
     },[]);
 
