@@ -46,16 +46,6 @@ const formItemLayout = {
   };
 
 
-
-  
-  // 이메일 인증시 대학교 메일 형식인지 체크
-  // 이메일 인증 구현 + db 수정 => 인증된 사용자만 upload 가능 수정 
-  // 메타마스크 주소 유효성 검사 추가 
-  // 대학교 메일 인증시에만 upload 가능하다는 안내문 -> Landing Page
-
-
-
-
 function MyAccount(props) {
     const dispatch = useDispatch();
     // const [Account, setAccount] = useState([])
@@ -170,23 +160,15 @@ function MyAccount(props) {
                 )}
               </Form.Item>
 
-
-              {/*  대학교 메일 형식인지 체크 필수 !!!!!!!!!!!!!!!!!!! */}
-              <Form.Item {...tailFormItemLayout}> 
-                  <Button style={{ float: 'right'}}>
-                    <EditOutlined />
-                    <a href={""}> 인증메일 전송</a> 
-                    {/* <a href={`/edit/${product._id}`}>edit</a> */}
-                  </Button>
-              </Form.Item>
-
                   {/*메타주소*/}
                   <Form.Item required label="메타마스크 주소" hasFeedback validateStatus={errors.wallet && touched.wallet ? "error" : 'success'}>
                 <Input
+                  style={{ backgroundColor: 'lightgray' }} 
                   id="wallet"
                   placeholder="Enter your Metamask account"
                   type="text"
                   value={values.wallet}
+                  readOnly
                   onChange={handleChange}
                   onBlur={handleBlur}
                   className={
