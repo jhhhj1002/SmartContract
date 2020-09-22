@@ -31,6 +31,9 @@ const productSchema = mongoose.Schema({
         type: Number,
         default: 1
     },
+    active: {
+        type: Boolean
+    },
     sold: {
         type: Number,
         maxlength: 100,
