@@ -9,10 +9,6 @@ import { useDispatch } from "react-redux";
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 
-// 지갑 주소 수정 불가하게 바꾸기
-// 이메일 인증버튼 지우기
-
-
 import {
     Form,
     Input,
