@@ -70,7 +70,8 @@ contract Auctions {
 		    auctions[_auctionId].finalized = true;
 		    emit AuctionFinalized(msg.sender, _auctionId);
 		}
-		buyAuction(test_addr);
+		
+		//buyAuction();
 		emit AuctionPayed(msg.sender, myAuction.owner, myAuction.price);
 		//옥션 소유자를 구매자 주소로 넣음
 		//auctions[_auctionId].owner = msg.sender;
@@ -88,12 +89,12 @@ contract Auctions {
 //***************************** 채연 테스트 함수 */
 
    // blockchain에 저장되는 중요 함수.
-    function buyAuction() public payable {
+    function buyAuction( uint price) public payable {
 		// owner = auction을 올린 계정
         // _auctionId = msg.sender;
         // owner에게 매입가를 전송함.
-		address _to = 0x7eC286896D4B7E989bAcA850f7a081C0545201b6;
-        _to.transfer(3); //이게 작동해서 첫번째 계정으로 송금되고, 두번째 계정이 깎임.
+		address _to = 0x80f9e0792e708aDA65FF57398b2a2A72709B948D;
+        _to.transfer(msg.value); //이게 작동해서 첫번째 계정으로 송금되고, 두번째 계정이 깎임.
         //emit LogBuyRealEstate(msg.sender, _id);
 
     }
