@@ -1,4 +1,4 @@
-pragma solidity  >=0.4.21;
+pragma solidity  >=0.6.0;
 
 contract RealEstate {
     //매입자의정보

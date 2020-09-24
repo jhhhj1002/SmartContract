@@ -1,6 +1,7 @@
-pragma solidity ^0.4.23;
+pragma solidity  >=0.6.0;
 
 import "./MyNFT.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract Auctions {
 	Auction[] public auctions;		//옥션을 저장하는 배열
@@ -24,7 +25,7 @@ contract Auctions {
 		return my_addr.balance;
 		}
 
-	function() public {
+	fallback() public  {
 	  revert();
 	}
 
@@ -101,20 +102,20 @@ contract Auctions {
 		return true;
 	}
 
-    function getCount() public constant returns(uint) {
+    function getCount() public  returns(uint) {
 		return auctions.length;
 	}
 
-	function getAuctionsOf(address _owner) public constant returns(uint[]) {
+	function getAuctionsOf(address _owner) public  returns(uint[]) {
 		uint[] memory ownedAuctions = auctionOwner[_owner];
 		return ownedAuctions;
 	}
 
-	function getAuctionsCountOfOwner(address _owner) public constant returns(uint) {
+	function getAuctionsCountOfOwner(address _owner) public  returns(uint) {
 		return auctionOwner[_owner].length;
 	}
 
-	function getAuctionById(uint _auctionId) public constant returns(
+	function getAuctionById(uint _auctionId) public  returns(
 		string name,
 		uint256 price,
 		// string metadata,
