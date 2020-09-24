@@ -22,6 +22,11 @@ import {
 // + 내가 구매한 내역 -> History 연결 ? -> 이건위에 바로 history잇으니까 없어도 될듯해
 
 
+// --> NEW!!!
+// 내가 업로드한 내역중 active 한것, active 하지 않은것 구분 
+// delete 삭제
+
+
 const { Meta } = Card;
 
 function Mypage(props) {
@@ -78,39 +83,121 @@ function Mypage(props) {
 
     /* 상품 삭제 메소드 */
     const deleteHandler = (event, productId) => {
-            alert("Are you sure you want to delete it ?")
-            event.preventDefault();
-            console.log("productid", productId)
-            dispatch(deleteItem(productId))
-                .then(response => response.data)
-    
-            window.location.reload()
+        alert("Are you sure you want to delete it ?")
+        event.preventDefault();
+        console.log("productid", productId)
+        dispatch(deleteItem(productId))
+            .then(response => response.data)
+
+        window.location.reload()
     }
 
 
     const renderCards = Products.map((product, index) => {
 
+
         return <Col lg={6} md={8} xs={24}>
-            <Card
-                hoverable={true}
-                cover={<a href={`/product/${product._id}`} style={{  marginTop: '1rem' }} > <ImageSlider images={product.images} /></a>}
-            >
-                <Meta
-                    title={product.title}
-                    description={`$${product.price}`}
-                /><br/>
-                <Button style={{ float: 'left',marginRight : '1rem'}}>
-                    <EditOutlined />
-                    <a href={`/edit/${product._id}`}>edit</a>
-                </Button>
-                <form>
-                <Button type="submit" onClick={(event) => deleteHandler(event, product._id)} style={{ float: 'left'}}>
-                    <DeleteOutlined />
+            {product.active == true ?
+                <Card
+                    hoverable={true}
+                    cover={<a href={`/product/${product._id}`} style={{ marginTop: '1rem' }} > <ImageSlider images={product.images} /></a>}
+                >
+                    <Meta
+                        title={product.title}
+                        description={`$${product.price}`}
+                    /><br />
+
+                    <Button style={{ float: 'left', marginRight: '1rem' }}>
+                        <EditOutlined />
+                        <a href={`/edit/${product._id}`}>edit</a>
+                    </Button>
+                </Card>
+                :
+                <Card
+                    style={{ backgroundColor: "lightgray" , webkitFilter: "grayscale(100%)"}}
+                    hoverable={true}
+                    cover={<a href={`/product/${product._id}`} style={{marginTop: '1rem' }} > <ImageSlider images={product.images} /></a>}
+                >
+
+                    <Meta
+                        title={product.title}
+                        description={`$${product.price}`}
+                    /><br />
+
+                    <Button style={{ backgroundColor: "lightgray", float: 'left', marginRight: '1rem' }}>
+                        <EditOutlined />
+                        <a href={`/edit/${product._id}`}>edit</a>
+                    </Button>
+                    {/* <form>
+                        <Button type="submit" onClick={(event) => deleteHandler(event, product._id)} style={{ backgroundColor: "lightgray",float: 'left' }}>
+                            <DeleteOutlined />
                     delete
                 </Button>
-                </form>
-            </Card>
+                    </form> */}
+                </Card>
+            }
+
         </Col>
+
+
+        // if(product.active == true){
+        //     return <Col lg={6} md={8} xs={24}>
+
+        //     <Card
+        //         hoverable={true}
+        //         cover={<a href={`/product/${product._id}`} style={{  marginTop: '1rem' }} > <ImageSlider images={product.images} /></a>}
+        //     >
+        //         <Meta
+        //             // title={`${product.active}`}
+        //             title={product.title}
+        //             description={`$${product.price}`}
+        //         /><br/>
+
+        //         <Button style={{ float: 'left',marginRight : '1rem'}}>
+        //             <EditOutlined />
+        //             <a href={`/edit/${product._id}`}>edit</a>
+        //         </Button>
+        //         <form>
+        //         <Button type="submit" onClick={(event) => deleteHandler(event, product._id)} style={{ float: 'left'}}>
+        //             <DeleteOutlined />
+        //             delete
+        //         </Button>
+        //         </form>
+        //     </Card>
+        // </Col>
+        // }
+        // else{
+        //     return <Col lg={6} md={8} xs={24} style={{ backgroundColor: "red"}} >
+        //     <div style={{ backgroundColor: "orange"}}>
+
+        //     <Card
+        //     style={{ backgroundColor: "purple"}}
+        //         hoverable={true}
+        //         cover={<a href={`/product/${product._id}`} style={{ backgroundColor: "blue", marginTop: '1rem'}} > <ImageSlider images={product.images} style={{ Color: "green"}}/></a>}
+        //     >
+        //         <Meta
+        //          style={{ backgroundColor: "yellow"}}
+        //             // title={`${product.active}`}
+        //             title={product.title}
+        //             description={`$${product.price}`}
+        //         /><br/>
+
+        //         <Button style={{ backgroundColor: "pink", float: 'left',marginRight : '1rem'}}>
+        //             <EditOutlined />
+        //             <a href={`/edit/${product._id}`}>edit</a>
+        //         </Button>
+        //         {/* <form>
+        //         <Button type="submit" onClick={(event) => deleteHandler(event, product._id)} style={{ float: 'left'}}>
+        //             <DeleteOutlined />
+        //             delete
+        //         </Button>
+        //         </form> */}
+        //     </Card>
+        //     </div>
+        // </Col>
+
+
+
     })
 
     const showFilteredResults = (filters) => {
@@ -150,12 +237,12 @@ function Mypage(props) {
             </div><br />
             <div>
                 <a href={`myaccount`} >
-                    <Button style={{ float: 'right'}}>
+                    <Button style={{ float: 'right' }}>
                         <EditOutlined />
                             My Account
                     </Button>
                 </a>
-            </div><br/><br/>
+            </div><br /><br />
 
             <Row gutter={[16, 16]}>
                 <Col lg={12} xs={24} >
