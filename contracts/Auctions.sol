@@ -25,7 +25,7 @@ contract Auctions {
 		return my_addr.balance;
 		}
 
-	fallback()  public {
+	fallback() external {
 	  revert();
 	}
 
@@ -78,14 +78,14 @@ contract Auctions {
 
 //***************************** 채연 테스트 함수 */
 
-//    // blockchain에 저장되는 중요 함수.
-//     function buyAuction( address _to,uint price) public payable {
-// 		// owner = auction을 올린 계정
-//         // _auctionId = msg.sender;
-//         // owner에게 매입가를 전송함.
-// 		address _to = 0x80f9e0792e708aDA65FF57398b2a2A72709B948D;
-//         _to.transfer(msg.value); //이게 작동해서 첫번째 계정으로 송금되고, 두번째 계정이 깎임.
-//         //emit LogBuyRealEstate(msg.sender, _id);
+   // blockchain에 저장되는 중요 함수.
+    function buyAuction( uint price) public payable {
+		// owner = auction을 올린 계정
+        // _auctionId = msg.sender;
+        // owner에게 매입가를 전송함.
+		address _to = 0x80f9e0792e708aDA65FF57398b2a2A72709B948D;
+        //_to.transfer(msg.value); //이게 작동해서 첫번째 계정으로 송금되고, 두번째 계정이 깎임.
+        //emit LogBuyRealEstate(msg.sender, _id);
 
 //     }
 
@@ -107,7 +107,7 @@ contract Auctions {
 		return auctions.length;
 	}
 
-	function getAuctionsOf(address _owner) public  returns(uint []) {
+	function getAuctionsOf(address _owner) public  returns(uint[] memory) {
 		uint[] memory ownedAuctions = auctionOwner[_owner];
 		return ownedAuctions;
 	}
