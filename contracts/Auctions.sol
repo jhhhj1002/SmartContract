@@ -6,7 +6,6 @@ contract Auctions {
 	Auction[] public auctions;		//옥션을 저장하는 배열
  	mapping(address => uint[]) public auctionOwner; 	//소유자 어드레스가 가지고 있는 토큰id
     address public my_addr;
-	address public test_addr = 0x7eC286896D4B7E989bAcA850f7a081C0545201b6;
 
 	struct Auction {
 	  string name; // 제목
@@ -63,8 +62,6 @@ contract Auctions {
 		Auction memory myAuction = auctions[_auctionId];
 		if(approveAndTransfer(address(this), _to, myAuction.repoAddress, myAuction.tokenId)){
 			//받는 어드레스에 소유권이 승인되고 전달되는 함수, 여기가 완료되면 해당 옥션의 상태가 종료로 바뀜
-			// @@@@@@@@@@@@@@@@@@@@여기에서 해당 옥션의 가격을 가져오고 이더리움 실제 거래가 되어야 함@@@@@@@@@@@@@@@@@
-			//buyAuction(_auctionId, _to);
 			//그 다음 auctionfinalized 이벤트를 송출함
 		    auctions[_auctionId].active = false;
 		    auctions[_auctionId].finalized = true;
@@ -76,16 +73,7 @@ contract Auctions {
 		//옥션 소유자를 구매자 주소로 넣음
 		//auctions[_auctionId].owner = msg.sender;
 	}
-//***************************** 채연 테스트 함수 */
-	function testFinalizeAuction(uint _auctionId, address _to, uint price) public payable{
-		//auction을 소유자에게 전달하는 함수
-		Auction memory myAuction = auctions[_auctionId];
-		if(approveAndTransfer(address(this), _to, myAuction.repoAddress, myAuction.tokenId)){
-			//받는 어드레스에 소유권이 승인되고 전달되는 함수, 여기가 완료되면 해당 옥션의 상태가 종료로 바뀜
-			// @@@@@@@@@@@@@@@@@@@@여기에서 해당 옥션의 가격을 가져오고 이더리움 실제 거래가 되어야 함@@@@@@@@@@@@@@@@@
-			//그 다음 auctionfinalized 이벤트를 송출함
-		}
-	}
+
 //***************************** 채연 테스트 함수 */
 
    // blockchain에 저장되는 중요 함수.
