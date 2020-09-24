@@ -30,19 +30,35 @@ function UploadProductPage(props) {
     const [MyNFTValues, setMyNFTValues] = useState({ account: '', contractInstance: '',tokenId: '',isRegistered: false})
     const [MyAuctionValues, setMyAuctionValues] = useState({ auctionTitle: '', contractInstance: '', price: ''})
 
-    const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545/')); // 가나슈 서버 포트
-    const myaccount = window.web3.eth.accounts[0]
+    // const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545/')); // 가나슈 서버 포트
+    // var myaccount = window.web3.eth.accounts[0];
+
+    const web3 = new Web3(window.web3.currentProvider);
+    const [MyAccount, setMyAccount]  =  useState("")
+
+    const setAddress = () =>{
+        web3.eth.getAccounts(function(error, accounts) {
+            if(error) {
+                 console.log('error');
+             }
+             setMyAccount(accounts[0])
+     })
+    }
+   
     
     const getRandomInt = (min, max) => {
         return Math.floor(Math.random() * (max - min + 1)) + min
     }
 
     useEffect(() => {
-        console.log(myaccount)
+        setAddress()
+      },[]);
+
+    useEffect(() => {
         // var web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545/')); // 가나슈 서버 포트
-        setMyNFTValues({account : myaccount, contractInstance: window.web3.eth.contract(Config.MYNFT_ABI).at(Config.MYNFT_CA),tokenId : getRandomInt(123456789,999999999)});
+        setMyNFTValues({account : MyAccount, contractInstance: window.web3.eth.contract(Config.MYNFT_ABI).at(Config.MYNFT_CA),tokenId : getRandomInt(123456789,999999999)});
         setMyAuctionValues({contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA)});
-    },[]);
+    },[MyAccount]);
 
     console.log(MyNFTValues)
 
