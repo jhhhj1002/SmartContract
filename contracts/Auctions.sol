@@ -39,7 +39,7 @@ contract Auctions {
 	  _;
 	}
 
-	function createAuction(address _repoAddress, uint256 _tokenId, string _auctionTitle, uint256 _price) public contractIsNFTOwner(_repoAddress, _tokenId) returns(bool) {
+	function createAuction(address _repoAddress, uint256 _tokenId, string memory _auctionTitle, uint256 _price) public contractIsNFTOwner(_repoAddress, _tokenId) returns(bool) {
 		// 새 auction을 생성하는 함수
 		uint auctionId = auctions.length;
 		Auction memory newAuction;
@@ -118,7 +118,7 @@ contract Auctions {
 	}
 
 	function getAuctionById(uint _auctionId) public  returns(
-		string name,
+		string memory name,
 		uint256 price,
 		// string metadata,
 		uint256 tokenId,

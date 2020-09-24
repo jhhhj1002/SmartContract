@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 // 제플린의 ERC21Token 컨트랙트 파일을 임포트하고, 이를 현재 컨트랙트로 상속받는다.
 contract MyNFT is ERC721 {
-    constructor (string _name, string _symbol) public
+    constructor (string memory _name, string memory _symbol) public
         ERC721(_name, _symbol) {}
 
     // 생성자로서, 등록하고자 하는 토큰의 이름, 심벌이 기본 값으로 들어간다.
