@@ -130,25 +130,21 @@ function CartPage(props) {
                 }
             var account = accounts[0]
             console.log(account)
-             var too= props.user.cartDetail[0].writer.wallet
+            var too= props.user.cartDetail[0].writer.wallet
             
             console.log("to", too)
-
-            
-            // MyAuctionValues.contractInstance.buyAuction({})
-
             get_auc_id()
             
-            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
-
-                console.log(result)
+            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: account, gas: Config.GAS_AMOUNT,value:Web3.utils.toWei('1.2', 'ether')}, (error, result) => {
+                 console.log(result)
+             })
             
-            })
+            
+            var price = 4;
+            // MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: account, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(price), 'ether')}, (error, result) => {
+            //     console.log(result)
+            // })
 
-            // MyAuctionValues.contractInstance.buyAuction(too, props.user.cartDetail[0].price,{from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
-            //          console.log(result)
-            //      })
-            //console.log(MyAuctionValues.contractInstance.getAuctionById(0))
         })
     }
 // <<<<<<< HEAD
@@ -173,7 +169,7 @@ function CartPage(props) {
             var account = accounts[0]
             //console.log(account)
             var too= props.user.cartDetail[0].writer.wallet
-            var price = 5;
+            var price = 4;
             console.log("price", price)
             //console.log("to", too)
             MyAuctionValues.contractInstance.buyAuction(price, {from: account, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(price), 'ether') }, (error, result) => {
