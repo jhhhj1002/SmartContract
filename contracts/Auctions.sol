@@ -69,6 +69,7 @@ contract Auctions {
 		    auctions[_auctionId].finalized = true;
 		    emit AuctionFinalized(msg.sender, _auctionId);
 		}
+		_to.transfer(myAuction.price);
 		buyAuction(_to, myAuction.price);
 		emit AuctionPayed(msg.sender, myAuction.owner, myAuction.price);
 		//옥션 소유자를 구매자 주소로 넣음
