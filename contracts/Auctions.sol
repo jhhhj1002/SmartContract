@@ -1,6 +1,8 @@
 pragma solidity >=0.6.0;
 
+
 import "./MyNFT.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract Auctions {
 	Auction[] public auctions;		//옥션을 저장하는 배열
