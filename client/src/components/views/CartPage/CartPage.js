@@ -9,7 +9,11 @@ import UserCardBlock from './Sections/UserCardBlock';
 import { Result, Empty } from 'antd';
 import web3 from 'web3';
 import Config from '../../Config';
+
+
 //import Paypal from '../../utils/Paypal';
+
+
 
 function CartPage(props) {
     const dispatch = useDispatch();
@@ -20,6 +24,11 @@ function CartPage(props) {
     //https://web3js.readthedocs.io/en/v1.2.0/web3-eth.html 여기서 web3함수랑 초기설정있음!
     const [MyAuctionValues, setMyAuctionValues] = useState({ contractInstance: '', productId: '', from: '', to: '', productPrice: '', tokenid:''})
     let auc_id=[];
+
+    const[cyContract] = useState({contractInstance: ''})
+
+   
+
 
     useEffect(() => {
         setMyAuctionValues({contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA)});
@@ -58,8 +67,8 @@ function CartPage(props) {
     const calculateTotal = (cartDetail) => {
         let total = 0;
 
-        cartDetail.map(item => {
-            total += parseInt(item.price, 10) * item.quantity
+        cartDetail.map(item => {//정수말고 실수로 바꿔야함
+            total += parseFloat(item.price, 10) * item.quantity
         });
 
         setTotal(total)
@@ -122,32 +131,53 @@ function CartPage(props) {
             var account = accounts[0]
             console.log(account)
             var too= props.user.cartDetail[0].writer.wallet
+            
             console.log("to", too)
             get_auc_id()
-            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
-                console.log(result)
             
-            })
-            // MyAuctionValues.contractInstance.buyAuction(too, props.user.cartDetail[0].price,{from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
-            //          console.log(result)
-            //      })
-           // console.log(MyAuctionValues.contractInstance.getAuctionById(0))
+            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
+                 console.log(result)
+             })
+            
+            
+            //var price = 4;
+            // MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: account, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(price), 'ether')}, (error, result) => {
+            //     console.log(result)
+            // })
+
         })
     }
+// <<<<<<< HEAD
+// ////////////////////////////////////////////
+
+// const testFinalizeAuction = () =>{
+//     MyAuctionValues.contractInstance.buyAuction( {from: account, gas: Config.GAS_AMOUNT},(error, result) => {
+//         console.log(result)
+//     });
+
+// }
+
+
+
+
     const buyAuction = () =>{
+        // Web3.eth.toWei
         Web3.eth.getAccounts(function(error, accounts) {
                if(error) {
                     console.log('error');
                 }
             var account = accounts[0]
-            console.log(account)
+            //console.log(account)
             var too= props.user.cartDetail[0].writer.wallet
-            console.log("to", too)
-            MyAuctionValues.contractInstance.buyAuction(too, props.user.cartDetail[0].price,{from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
-                     console.log(result)
-            })
+            var price = 4;
+            console.log("price", price)
+            //console.log("to", too)
+            MyAuctionValues.contractInstance.buyAuction(price, {from: account, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(price), 'ether') }, (error, result) => {
+                     console.log("price", price)
+            });
         })
     }
+// >>>>>>> 30c425c5a9f2664f20d12afd488ad10f44c585a6
 
     return (
         <div style={{ width: '85%', margin: '3rem auto' }}>
@@ -185,7 +215,23 @@ function CartPage(props) {
 
 
 
+            {/*ShowTotal &&	                <button class="btn btn-info btn-buy"
+
+                    type="button"
+                <Paypal	                    data-toggle="modal"
+                    toPay={Total}	                    data-target="#buyModal">
+                    onSuccess={transactionSuccess}	                    구매
+                    transactionError={transactionError}	                </button>
+                    transactionCanceled={transactionCanceled}	                <div class="modal fade" tabindex="-1" role="dialog" id="buyModal">
+                />	                    <div class="modal-content">
+
+                    <div class="modal-footer">
+            */}
+
             {/* Paypal Button    @@@@@@@@@@@@@@@@@@@@@@@@@@@채연 변경할 버튼 구간@@@@@@@@@@@@@@@@@@*/}
+
+
+
                 <button class="btn btn-info btn-buy"
                     type="button"
                     data-toggle="modal"
@@ -193,7 +239,7 @@ function CartPage(props) {
                     구매
                 </button>
 
-                <button type="button" onClick={finalizeAuction}>채연</button>
+                <button type="button" onClick={buyAuction}>채연</button>
 
 
                 <div class="modal fade" tabindex="-1" role="dialog" id="buyModal">
