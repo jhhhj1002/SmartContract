@@ -25,6 +25,7 @@ import {
 // --> NEW!!!
 // 내가 업로드한 내역중 active 한것, active 하지 않은것 구분 
 // delete 삭제
+// not active 한것에 대한 edit 버튼 삭제 ?
 
 
 const { Meta } = Card;
@@ -114,7 +115,7 @@ function Mypage(props) {
                 </Card>
                 :
                 <Card
-                    style={{ backgroundColor: "lightgray" , webkitFilter: "grayscale(100%)"}}
+                    style={{ webkitFilter: "grayscale(100%)"}}
                     hoverable={true}
                     cover={<a href={`/product/${product._id}`} style={{marginTop: '1rem' }} > <ImageSlider images={product.images} /></a>}
                 >
@@ -124,7 +125,7 @@ function Mypage(props) {
                         description={`$${product.price}`}
                     /><br />
 
-                    <Button style={{ backgroundColor: "lightgray", float: 'left', marginRight: '1rem' }}>
+                    <Button disabled style={{ float: 'left', marginRight: '1rem'}}>
                         <EditOutlined />
                         <a href={`/edit/${product._id}`}>edit</a>
                     </Button>
