@@ -135,12 +135,12 @@ function CartPage(props) {
             console.log("to", too)
             get_auc_id()
             
-            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: account, gas: Config.GAS_AMOUNT,value:Web3.utils.toWei('1.2', 'ether')}, (error, result) => {
+            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
                  console.log(result)
              })
             
             
-            var price = 4;
+            //var price = 4;
             // MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: account, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(price), 'ether')}, (error, result) => {
             //     console.log(result)
             // })
