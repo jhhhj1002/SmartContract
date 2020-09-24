@@ -13,8 +13,8 @@ contract MyNFT is ERC721 {
     //토큰을 등록할 때 소유권의 어드레스, 토큰의 유니크 아이디, 세부 정보를 포함하는 uri가 파리미터로 전달된다.
     function registerUniqueToken( 
         address _to,
-        uint256 _tokenId,
-         string  _tokenURI
+        uint256 _tokenId
+        // string  _tokenURI
     ) public
     {
           // import한 ERC21 라이브러리의 새 토큰을 생성하는 _mint 함수를 호출한다.

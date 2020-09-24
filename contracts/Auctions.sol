@@ -1,6 +1,5 @@
 pragma solidity >=0.6.0;
 
-
 import "./MyNFT.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
@@ -108,7 +107,7 @@ contract Auctions {
 		return auctions.length;
 	}
 
-	function getAuctionsOf(address _owner) public  returns(uint[]) {
+	function getAuctionsOf(address _owner) public  returns(uint []) {
 		uint[] memory ownedAuctions = auctionOwner[_owner];
 		return ownedAuctions;
 	}
