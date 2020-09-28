@@ -1,4 +1,4 @@
-pragma solidity >=0.6.0;
+pragma solidity  >=0.6.0;
 
 import "./MyNFT.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -63,13 +63,12 @@ contract Auctions {
 		Auction memory myAuction = auctions[_auctionId];
 		if(approveAndTransfer(address(this), _to, myAuction.repoAddress, myAuction.tokenId)){
 			//받는 어드레스에 소유권이 승인되고 전달되는 함수, 여기가 완료되면 해당 옥션의 상태가 종료로 바뀜
-			//그 다음 auctionfinalized 이벤트를 송출함
+			//그 다음 auctionfinalized 이벤트를 송출함
 		    auctions[_auctionId].active = false;
 		    auctions[_auctionId].finalized = true;
 		    emit AuctionFinalized(msg.sender, _auctionId);
 		}
-		// _to.transfer(myAuction.price);
-		// buyAuction(_to, myAuction.price);
+		
 		//buyAuction();
 		emit AuctionPayed(msg.sender, myAuction.owner, myAuction.price);
 		//옥션 소유자를 구매자 주소로 넣음
@@ -87,7 +86,7 @@ contract Auctions {
         //_to.transfer(msg.value); //이게 작동해서 첫번째 계정으로 송금되고, 두번째 계정이 깎임.
         //emit LogBuyRealEstate(msg.sender, _id);
 
-//     }
+    }
 
 
 
