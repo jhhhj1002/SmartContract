@@ -22,16 +22,26 @@ function CartPage(props) {
     const [ShowSuccess, setShowSuccess] = useState(false)
     var Web3 = new web3(web3.givenProvider || 'ws://some.local-or-remote.node:8546')
     //https://web3js.readthedocs.io/en/v1.2.0/web3-eth.html 여기서 web3함수랑 초기설정있음!
-    const [MyAuctionValues, setMyAuctionValues] = useState({ contractInstance: '', productId: '', from: '', to: '', productPrice: '', tokenid:''})
+    const [MyAuctionValues, setMyAuctionValues] = useState({ contractInstance: '', productId: '', from: '', to: '', productPrice: '', tokenid:'', meta_addr:''})
     let auc_id=[];
 
     const[cyContract] = useState({contractInstance: ''})
+    const [MyAccount, setMyAccount]  =  useState("")
 
+    const setAddress = () =>{
+        web3.eth.getAccounts(function(error, accounts) {
+            if(error) {
+                 console.log('error');
+             }
+             setMyAccount(accounts[0])
+     })
+    }
    
 
 
     useEffect(() => {
-        setMyAuctionValues({contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA)});
+        setAddress()
+        setMyAuctionValues({contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA), meta_addr : MyAccount});
 
       let cartItems = [];
         if (props.user.userData && props.user.userData.cart) {
@@ -110,32 +120,36 @@ function CartPage(props) {
     }
 ////////////////////////////////////////////////
     //let auctionId = MyAuctionValues.contractInstance.auctionOwner[window.ethereum._state.accounts[0]]
-    var auctionId
 
     const getAuctionsOf =()=>{
-        Web3.eth.getAccounts(function(error, accounts) {
-            var account = accounts[0]
-
-        MyAuctionValues.contractInstance.getAuctionsOf(account, {from:account, gas: Config.GAS_AMOUNT}, (error, result) => {
-            auctionId = result
+        let auctionIds = []
+        MyAuctionValues.contractInstance.getAuctionsOf(MyAuctionValues.meta_addr, {from: MyAuctionValues.meta_addr, gas: Config.GAS_AMOUNT},(error, result) => {
+            auctionIds = result
+            console.log("auctionids = ", auctionIds)
         })
-        console.log("auctionid = ", auctionId)
-    })
+    }
+
+    const getAuctionById=()=>{
+        get_auc_id()
+        MyAuctionValues.contractInstance.getAuctionById(auc_id[0], (error, result)=>{
+            console.log("getauctionbyid", result.name)
+        })
+    }
+
+    const getCount = () =>{
+        MyAuctionValues.contractInstance.getCount({}, (error, result) =>{
+            var count = result
+            console.log("getcount", count)
+        })
     }
 
     const finalizeAuction = () =>{
-        Web3.eth.getAccounts(function(error, accounts) {
-               if(error) {
-                    console.log('error');
-                }
-            var account = accounts[0]
-            console.log(account)
             var too= props.user.cartDetail[0].writer.wallet
             
             console.log("to", too)
             get_auc_id()
             
-            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
+            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: MyAuctionValues.meta_addr, gas: Config.GAS_AMOUNT}, (error, result) => {
                  console.log(result)
              })
             
@@ -144,8 +158,6 @@ function CartPage(props) {
             // MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: account, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(price), 'ether')}, (error, result) => {
             //     console.log(result)
             // })
-
-        })
     }
 // <<<<<<< HEAD
 // ////////////////////////////////////////////
@@ -162,20 +174,13 @@ function CartPage(props) {
 
     const buyAuction = () =>{
         // Web3.eth.toWei
-        Web3.eth.getAccounts(function(error, accounts) {
-               if(error) {
-                    console.log('error');
-                }
-            var account = accounts[0]
-            //console.log(account)
             var too= props.user.cartDetail[0].writer.wallet
             var price = 4;
             console.log("price", price)
             //console.log("to", too)
-            MyAuctionValues.contractInstance.buyAuction(price, {from: account, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(price), 'ether') }, (error, result) => {
+            MyAuctionValues.contractInstance.buyAuction(price, {from: MyAuctionValues.meta_addr, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(price), 'ether') }, (error, result) => {
                      console.log("price", price)
             });
-        })
     }
 // >>>>>>> 30c425c5a9f2664f20d12afd488ad10f44c585a6
 
@@ -240,12 +245,12 @@ function CartPage(props) {
                 </button>
 
                 <button type="button" onClick={buyAuction}>채연</button>
-
+                <button type="button" onClick={getAuctionById}>현경</button>
 
                 <div class="modal fade" tabindex="-1" role="dialog" id="buyModal">
                     <div class="modal-content">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onClick={finalizeAuction}>구매테스트</button>
+                        <button type="button" class="btn btn-primary" onClick={getAuctionById}>구매테스트</button>
                     </div>
                     </div>
                 </div>
