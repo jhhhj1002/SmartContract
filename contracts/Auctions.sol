@@ -52,6 +52,7 @@ contract Auctions {
         newAuction.finalized = false;
 
 		auctions.push(newAuction);
+		require(auctions.length != 0);
 		auctionOwner[msg.sender].push(auctionId);
 
 		emit AuctionCreated(msg.sender, auctionId);
@@ -63,7 +64,7 @@ contract Auctions {
 		Auction memory myAuction = auctions[_auctionId];
 		if(approveAndTransfer(address(this), _to, myAuction.repoAddress, myAuction.tokenId)){
 			//받는 어드레스에 소유권이 승인되고 전달되는 함수, 여기가 완료되면 해당 옥션의 상태가 종료로 바뀜
-			//그 다음 auctionfinalized 이벤트를 송출함
+			//그 다음 auctionfinalized 이벤트를 송출함
 		    auctions[_auctionId].active = false;
 		    auctions[_auctionId].finalized = true;
 		    emit AuctionFinalized(msg.sender, _auctionId);
@@ -102,20 +103,20 @@ contract Auctions {
 		return true;
 	}
 
-    function getCount() public  returns(uint) {
+    function getCount() public view returns(uint) {
 		return auctions.length;
 	}
 
-	function getAuctionsOf(address _owner) public  returns(uint[] memory) {
+	function getAuctionsOf(address _owner) public view  returns(uint[] memory) {
 		uint[] memory ownedAuctions = auctionOwner[_owner];
 		return ownedAuctions;
 	}
 
-	function getAuctionsCountOfOwner(address _owner) public  returns(uint) {
+	function getAuctionsCountOfOwner(address _owner) public view returns(uint) {
 		return auctionOwner[_owner].length;
 	}
 
-	function getAuctionById(uint _auctionId) public  returns(
+	function getAuctionById(uint _auctionId) public view returns(
 		string memory name,
 		uint256 price,
 		// string metadata,

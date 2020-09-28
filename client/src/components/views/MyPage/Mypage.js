@@ -112,6 +112,12 @@ function Mypage(props) {
                         <EditOutlined />
                         <a href={`/edit/${product._id}`}>edit</a>
                     </Button>
+                    <form>
+                        <Button type="submit" onClick={(event) => deleteHandler(event, product._id)} style={{ backgroundColor: "lightgray",float: 'left' }}>
+                            <DeleteOutlined />
+                             delete
+                        </Button>
+                    </form>
                 </Card>
                 :
                 <Card
@@ -129,12 +135,12 @@ function Mypage(props) {
                         <EditOutlined />
                         <a href={`/edit/${product._id}`}>edit</a>
                     </Button>
-                    {/* <form>
+                    <form>
                         <Button type="submit" onClick={(event) => deleteHandler(event, product._id)} style={{ backgroundColor: "lightgray",float: 'left' }}>
                             <DeleteOutlined />
-                    delete
-                </Button>
-                    </form> */}
+                             delete
+                        </Button>
+                    </form>
                 </Card>
             }
 
