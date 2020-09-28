@@ -29,7 +29,7 @@ function CartPage(props) {
     const [MyAccount, setMyAccount]  =  useState("")
 
     const setAddress = () =>{
-        web3.eth.getAccounts(function(error, accounts) {
+        Web3.eth.getAccounts(function(error, accounts) {
             if(error) {
                  console.log('error');
              }
@@ -121,6 +121,12 @@ function CartPage(props) {
 ////////////////////////////////////////////////
     //let auctionId = MyAuctionValues.contractInstance.auctionOwner[window.ethereum._state.accounts[0]]
 
+    const getbalance=()=>{
+        MyAuctionValues.contractInstance.getBalance({}, (err, result)=>{
+            console.log("balance", result)
+        })
+    }
+
     const getAuctionsOf =()=>{
         let auctionIds = []
         MyAuctionValues.contractInstance.getAuctionsOf(MyAuctionValues.meta_addr, {from: MyAuctionValues.meta_addr, gas: Config.GAS_AMOUNT},(error, result) => {
@@ -132,7 +138,7 @@ function CartPage(props) {
     const getAuctionById=()=>{
         get_auc_id()
         MyAuctionValues.contractInstance.getAuctionById(auc_id[0], (error, result)=>{
-            console.log("getauctionbyid", result.name)
+            console.log("getauctionbyid", result)
         })
     }
 

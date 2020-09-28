@@ -52,6 +52,7 @@ contract Auctions {
         newAuction.finalized = false;
 
 		auctions.push(newAuction);
+		require(auctions.length != 0);
 		auctionOwner[msg.sender].push(auctionId);
 
 		emit AuctionCreated(msg.sender, auctionId);
@@ -102,20 +103,20 @@ contract Auctions {
 		return true;
 	}
 
-    function getCount() public  returns(uint) {
+    function getCount() public view returns(uint) {
 		return auctions.length;
 	}
 
-	function getAuctionsOf(address _owner) public  returns(uint[] memory) {
+	function getAuctionsOf(address _owner) public view  returns(uint[] memory) {
 		uint[] memory ownedAuctions = auctionOwner[_owner];
 		return ownedAuctions;
 	}
 
-	function getAuctionsCountOfOwner(address _owner) public  returns(uint) {
+	function getAuctionsCountOfOwner(address _owner) public view returns(uint) {
 		return auctionOwner[_owner].length;
 	}
 
-	function getAuctionById(uint _auctionId) public  returns(
+	function getAuctionById(uint _auctionId) public view returns(
 		string memory name,
 		uint256 price,
 		// string metadata,
