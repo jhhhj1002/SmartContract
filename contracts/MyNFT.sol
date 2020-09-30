@@ -1,4 +1,5 @@
-pragma solidity  >=0.6.0;
+pragma solidity >=0.6.0;
+
 
 //import "../node_modules/zeppelin-solidity/contracts/token/ERC721/ERC721Token.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";

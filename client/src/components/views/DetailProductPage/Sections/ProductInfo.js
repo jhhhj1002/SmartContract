@@ -28,13 +28,18 @@ function ProductInfo(props) {
             <br />
             <br />
             <br />
+            {Product.active == true ? 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button size="large" shape="round" type="danger"
-                    onClick={addToCarthandler}
-                >
-                    Add to Cart
-                    </Button>
-            </div>
+            <Button size="large" shape="round" type="danger"
+                onClick={addToCarthandler}
+            >
+                Add to Cart
+                </Button>
+        </div>
+        :    
+        <div></div>
+        }
+            
         </div>
     )
 }

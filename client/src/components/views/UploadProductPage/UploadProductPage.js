@@ -102,20 +102,21 @@ function UploadProductPage(props) {
         console.log(MyNFTValues)
       }
 
-      const watchCreated = (cb,variables) => {
+      const watchCreated = (cb) => {
         const currentBlock = getCurrentBlock()
         const eventWatcher = MyAuctionValues.contractInstance.AuctionCreated({}, {fromBlock: currentBlock - 1, toBlock: 'latest'})
         eventWatcher.watch(cb)
         alert("Creation completed...!")
-        uploadProduct(variables)
+        //uploadProduct(variables)
       }
 
 
-      const createAuction = (variables) => {     
+      const createAuction = () => {     
         const price = window.web3.toWei(MyAuctionValues.price, 'ether')
         MyAuctionValues.contractInstance.createAuction(Config.MYNFT_CA, MyNFTValues.tokenId, MyAuctionValues.auctionTitle, price, {from: MyNFTValues.account, gas: Config.GAS_AMOUNT}, (error, transactionHash) => {     
               console.log("txhash",transactionHash)    
-              watchCreated(transactionHash,variables)
+              console.log("auc_info",MyNFTValues.tokenId, MyAuctionValues.auctionTitle, price )
+              watchCreated(transactionHash)
           })
       }
       const transferToCA=()=>{
@@ -163,8 +164,9 @@ function UploadProductPage(props) {
             console.log("result",result)   
 
             watchTokenRegistered(result)
+            uploadProduct(variables)
             transferToCA()
-            createAuction(variables)
+            createAuction()
 
         })
     }
