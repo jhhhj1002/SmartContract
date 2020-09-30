@@ -126,12 +126,14 @@ function CartPage(props) {
             console.log("balance", result)
         })
     }
-
+    const getaddr=()=>{
+        MyAuctionValues.contractInstance.getaddr({}, (err, result)=>{
+            console.log("addr",result)
+        })
+    }
     const getAuctionsOf =()=>{
-        let auctionIds = []
-        MyAuctionValues.contractInstance.getAuctionsOf(MyAuctionValues.meta_addr, {from: MyAuctionValues.meta_addr, gas: Config.GAS_AMOUNT},(error, result) => {
-            auctionIds = result
-            console.log("auctionids = ", auctionIds)
+        MyAuctionValues.contractInstance.getAuctionsOf(0x0D4F42B0143c6560ab638F437B0dcCEdF9A0D9b3, (error, result) => {
+            console.log("auctionids = ", result)
         })
     }
 
@@ -144,8 +146,7 @@ function CartPage(props) {
 
     const getCount = () =>{
         MyAuctionValues.contractInstance.getCount({}, (error, result) =>{
-            var count = result
-            console.log("getcount", count)
+            console.log("getcount", result)
         })
     }
 
@@ -154,8 +155,9 @@ function CartPage(props) {
             
             console.log("to", too)
             get_auc_id()
-            
-            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: MyAuctionValues.meta_addr, gas: Config.GAS_AMOUNT}, (error, result) => {
+            var price = props.user.cartDetail[auc_id[0]].price
+
+            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: MyAuctionValues.meta_addr, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(price), 'ether')}, (error, result) => {
                  console.log(result)
              })
             
@@ -251,12 +253,12 @@ function CartPage(props) {
                 </button>
 
                 <button type="button" onClick={buyAuction}>채연</button>
-                <button type="button" onClick={getAuctionById}>현경</button>
+                <button type="button" onClick={getCount}>현경</button>
 
                 <div class="modal fade" tabindex="-1" role="dialog" id="buyModal">
                     <div class="modal-content">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onClick={getAuctionById}>구매테스트</button>
+                        <button type="button" class="btn btn-primary" onClick={getAuctionsOf}>구매테스트</button>
                     </div>
                     </div>
                 </div>

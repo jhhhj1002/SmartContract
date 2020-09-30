@@ -21,9 +21,45 @@ contract Auctions {
 	constructor() public {
 			my_addr = msg.sender; // 현재 생성한 계정값.(주소형), 이 컨트랙의 주인은 현재 배포 계정이다. 라는 뜻.
 		}
+	function getaddr() public view returns (address) {
+		return my_addr;
+	}
 	function getBalance() public view returns (uint256) {
 		return my_addr.balance;
 		}
+    function getCount() public view  returns(uint) {
+		return auctions.length;
+	}
+
+	function getAuctionsOf(address _owner) public  view returns(uint[] memory) {
+		uint[] memory ownedAuctions = auctionOwner[_owner];
+		return ownedAuctions;
+	}
+
+	function getAuctionsCountOfOwner(address _owner) public view returns(uint) {
+		return auctionOwner[_owner].length;
+	}
+
+	function getAuctionById(uint _auctionId) public  returns(
+		string memory name,
+		uint256 price,
+		// string metadata,
+		uint256 tokenId,
+		address repoAddress,
+		address owner,
+		bool active,
+		bool finalized) {
+		Auction memory auc = auctions[_auctionId];
+		return (
+			auc.name,
+			auc.price,
+			// auc.metadata,
+			auc.tokenId,
+			auc.repoAddress,
+			auc.owner,
+			auc.active,
+			auc.finalized);
+	}
 
 	fallback() external {
 	  revert();
@@ -101,40 +137,6 @@ contract Auctions {
 		remoteContract.transferFrom(_from, _to, _tokenId);
 		//remoteContract.transferFrom(_from, _to, _price);
 		return true;
-	}
-
-    function getCount() public view returns(uint) {
-		return auctions.length;
-	}
-
-	function getAuctionsOf(address _owner) public view  returns(uint[] memory) {
-		uint[] memory ownedAuctions = auctionOwner[_owner];
-		return ownedAuctions;
-	}
-
-	function getAuctionsCountOfOwner(address _owner) public view returns(uint) {
-		return auctionOwner[_owner].length;
-	}
-
-	function getAuctionById(uint _auctionId) public view returns(
-		string memory name,
-		uint256 price,
-		// string metadata,
-		uint256 tokenId,
-		address repoAddress,
-		address owner,
-		bool active,
-		bool finalized) {
-		Auction memory auc = auctions[_auctionId];
-		return (
-			auc.name,
-			auc.price,
-			// auc.metadata,
-			auc.tokenId,
-			auc.repoAddress,
-			auc.owner,
-			auc.active,
-			auc.finalized);
 	}
 
 	event AuctionPayed(address buyer, address seller, uint _price);
