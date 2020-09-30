@@ -131,11 +131,13 @@ function CartPage(props) {
             var account = accounts[0]
             console.log(account)
             var too= props.user.cartDetail[0].writer.wallet
-            
             console.log("to", too)
             get_auc_id()
+            var price = 3
             
-            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: account, gas: Config.GAS_AMOUNT}, (error, result) => {
+           
+            
+            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: account, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(price), 'ether')}, (error, result) => {
                  console.log(result)
              })
             
@@ -174,6 +176,7 @@ function CartPage(props) {
             //console.log("to", too)
             MyAuctionValues.contractInstance.buyAuction(price, {from: account, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(price), 'ether') }, (error, result) => {
                      console.log("price", price)
+                   
             });
         })
     }

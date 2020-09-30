@@ -66,11 +66,19 @@ contract Auctions {
 			//그 다음 auctionfinalized 이벤트를 송출함
 		    auctions[_auctionId].active = false;
 		    auctions[_auctionId].finalized = true;
+
+			require(auctions[_auctionId].finalized, "success");
 		    emit AuctionFinalized(msg.sender, _auctionId);
+			
 		}
 		
+
+		
+		
+		
+		
 		//buyAuction();
-		emit AuctionPayed(msg.sender, myAuction.owner, myAuction.price);
+		//emit AuctionPayed(msg.sender, myAuction.owner, myAuction.price);
 		//옥션 소유자를 구매자 주소로 넣음
 		//auctions[_auctionId].owner = msg.sender;
 	}
