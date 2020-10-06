@@ -10359,10 +10359,80 @@
       "links": {},
       "address": "0x724754506994457612EDaE5D80e7c55648300fe7",
       "transactionHash": "0x26d3faeef946a1b9c845f3d0d34f700328e88b150f4f3e0db9bf318c62f820de"
+    },
+    "1601973615007": {
+      "events": {
+        "0x3249a06bd478adf780bb7930214ad005e9cfa517d63221c0b77f27199d1a58b3": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_owner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_auctionId",
+              "type": "uint256"
+            }
+          ],
+          "name": "AuctionCreated",
+          "type": "event"
+        },
+        "0x357afab190ee87fe0ef1c717f2728d2904d9e415a069d99f4d9382873cb3279d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_owner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_auctionId",
+              "type": "uint256"
+            }
+          ],
+          "name": "AuctionFinalized",
+          "type": "event"
+        },
+        "0xf21e4e6ae2bbd9bb251e47cec5bc13ba7683da6cd04eebb36f1074aa6b291eca": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "buyer",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "seller",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_price",
+              "type": "uint256"
+            }
+          ],
+          "name": "AuctionPayed",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x24269a37bfb237089f8484bb565F864f0003f93e",
+      "transactionHash": "0xd435c4a2f943d984b1b7f7460482d91c8b50cd8e2cd869aa9b9e281dce85e35f"
     }
   },
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-09-30T08:20:38.734Z",
+  "updatedAt": "2020-10-06T08:40:22.268Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

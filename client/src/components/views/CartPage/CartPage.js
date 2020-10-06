@@ -25,7 +25,7 @@ function CartPage(props) {
     const [MyAuctionValues, setMyAuctionValues] = useState({ contractInstance: '', productId: '', from: '', to: '', productPrice: '', tokenid:'', meta_addr:''})
     let auc_id=[];
 
-    const[cyContract] = useState({contractInstance: ''})
+
     const [MyAccount, setMyAccount]  =  useState("")
 
     const setAddress = () =>{
@@ -149,48 +149,30 @@ function CartPage(props) {
         })
     }
 
-    const finalizeAuction = () =>{
+    var price = Total
+    const finalizeAuction = (data) =>{
             var too= props.user.cartDetail[0].writer.wallet
             console.log("to", too)
+            console.log("price",Total)
             get_auc_id()
-            var price = 3
             
-           
-            
-            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: MyAuctionValues.meta_addr, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(price), 'ether')}, (error, result) => {
+            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: MyAuctionValues.meta_addr, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(Total), 'ether')}, (error, result) => {
                  console.log(result)
              })
             
-            
-            //var price = 4;
-            // MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: account, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(price), 'ether')}, (error, result) => {
-            //     console.log(result)
-            // })
+             transactionSuccess(data)
+      
     }
-// <<<<<<< HEAD
-// ////////////////////////////////////////////
 
-// const testFinalizeAuction = () =>{
-//     MyAuctionValues.contractInstance.buyAuction( {from: account, gas: Config.GAS_AMOUNT},(error, result) => {
-//         console.log(result)
-//     });
+    //   var price = Total
+      const sayHello = function(){ 
 
-// }
+        console.log("가격", Total)
 
 
+      };
 
 
-    const buyAuction = () =>{
-        // Web3.eth.toWei
-            var too= props.user.cartDetail[0].writer.wallet
-            var price = 4;
-            console.log("price", price)
-            //console.log("to", too)
-            MyAuctionValues.contractInstance.buyAuction(price, {from: MyAuctionValues.meta_addr, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(price), 'ether') }, (error, result) => {
-                     console.log("price", price)
-                   
-            });
-    }
 // >>>>>>> 30c425c5a9f2664f20d12afd488ad10f44c585a6
 
     return (
@@ -253,7 +235,9 @@ function CartPage(props) {
                     구매
                 </button>
 
-                <button type="button" onClick={finalizeAuction}>채연</button>
+                
+                <button type="button" onClick={sayHello}>채연1</button>
+                <button type="button" onClick={finalizeAuction}>finalizeAuction</button>
                 <button type="button" onClick={getAuctionById}>현경</button>
 
                 <div class="modal fade" tabindex="-1" role="dialog" id="buyModal">
