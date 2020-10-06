@@ -132,7 +132,7 @@ function CartPage(props) {
         })
     }
     const getAuctionsOf =()=>{
-        MyAuctionValues.contractInstance.getAuctionsOf(0x0D4F42B0143c6560ab638F437B0dcCEdF9A0D9b3, (error, result) => {
+        MyAuctionValues.contractInstance.getAuctionsOf(MyAuctionValues.meta_addr, (error, result) => {
             console.log("auctionids = ", result)
         })
     }
@@ -149,15 +149,20 @@ function CartPage(props) {
             console.log("getcount", result)
         })
     }
+    const getAuctionsCountOfOwner = ()=>{
+        MyAuctionValues.contractInstance.getAuctionsCountOfOwner(MyAuctionValues.meta_addr, (error, result)=>{
+            console.log("getAuctionsCountOfOwner",result)
+        })
+    }
 
     const finalizeAuction = () =>{
             var too= props.user.cartDetail[0].writer.wallet
             
             console.log("to", too)
             get_auc_id()
-            var price = props.user.cartDetail[auc_id[0]].price
+            //var price = props.user.cartDetail[auc_id[0]].price
 
-            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: MyAuctionValues.meta_addr, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(price), 'ether')}, (error, result) => {
+            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: MyAuctionValues.meta_addr, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(Total), 'ether')}, (error, result) => {
                  console.log(result)
              })
             
@@ -253,12 +258,14 @@ function CartPage(props) {
                 </button>
 
                 <button type="button" onClick={buyAuction}>채연</button>
-                <button type="button" onClick={getCount}>현경</button>
-
+                <button type="button" onClick={getAuctionsCountOfOwner}>getAuctionsCountOfOwner</button>
+                <button type="button" onClick={getCount}>getCount</button>
+                <button type="button" onClick={getAuctionById}>getAuctionById</button>
+                
                 <div class="modal fade" tabindex="-1" role="dialog" id="buyModal">
                     <div class="modal-content">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onClick={getAuctionsOf}>구매테스트</button>
+                        <button type="button" class="btn btn-primary" onClick={finalizeAuction}>finalizeAuction</button>
                     </div>
                     </div>
                 </div>

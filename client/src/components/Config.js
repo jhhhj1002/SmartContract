@@ -6,8 +6,8 @@ const MyNFT = require('../contracts/MyNFT')
 const Auctions = require('../contracts/Auctions')
 
 export default {
-	MYNFT_CA: '0x04ce313ac7EEF4199d9E46801f5043b74c6fB392',//migrate할 때 주소 (사람마다 다시 할 때마다 다름)
-	AUCTIONS_CA: '0x2AF143bd3af0F11850bf0c77Ac32924561278EA3',
+	MYNFT_CA: '0x1fa082b9Bad169b4262931D32Ae122c06c164b59',//migrate할 때 주소 (사람마다 다시 할 때마다 다름)
+	AUCTIONS_CA: '0xf821cc2A09912810E2f032DEdbC76272963103Ad',
 	
 	MYNFT_ABI: MyNFT.abi,
 	AUCTIONS_ABI: Auctions.abi,

@@ -40,7 +40,7 @@ contract Auctions {
 		return auctionOwner[_owner].length;
 	}
 
-	function getAuctionById(uint _auctionId) public  returns(
+	function getAuctionById(uint _auctionId) public view returns(
 		string memory name,
 		uint256 price,
 		// string metadata,
@@ -74,7 +74,7 @@ contract Auctions {
 	  _;
 	}
 
-	function createAuction(address _repoAddress, uint256 _tokenId, string memory _auctionTitle, uint256 _price) public contractIsNFTOwner(_repoAddress, _tokenId) returns(bool) {
+	function createAuction(address _repoAddress, uint256 _tokenId, string memory _auctionTitle, uint256 _price, address _owner) public contractIsNFTOwner(_repoAddress, _tokenId) returns(bool) {
 		// 새 auction을 생성하는 함수
 		uint auctionId = auctions.length;
 		Auction memory newAuction;
@@ -83,19 +83,19 @@ contract Auctions {
 		// newAuction.metadata = _metadata;
 		newAuction.tokenId = _tokenId;
 		newAuction.repoAddress = _repoAddress;
-		newAuction.owner = msg.sender;
+		newAuction.owner = _owner;
 		newAuction.active = true;
         newAuction.finalized = false;
 
 		auctions.push(newAuction);
 		require(auctions.length != 0);
-		auctionOwner[msg.sender].push(auctionId);
+		auctionOwner[_owner].push(auctionId);
 
 		emit AuctionCreated(msg.sender, auctionId);
 		return true;
 	}
 
-	function finalizeAuction(uint _auctionId, address _to) public payable {
+	function finalizeAuction(uint _auctionId, address  _to) public payable {
 		//auction을 소유자에게 전달하는 함수
 		Auction memory myAuction = auctions[_auctionId];
 		if(approveAndTransfer(address(this), _to, myAuction.repoAddress, myAuction.tokenId)){
@@ -103,6 +103,7 @@ contract Auctions {
 			//그 다음 auctionfinalized 이벤트를 송출함
 		    auctions[_auctionId].active = false;
 		    auctions[_auctionId].finalized = true;
+			//_to.transfer(auctions[_auctionId].price);
 		    emit AuctionFinalized(msg.sender, _auctionId);
 		}
 		

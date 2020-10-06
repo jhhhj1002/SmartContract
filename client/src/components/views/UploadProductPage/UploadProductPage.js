@@ -113,7 +113,7 @@ function UploadProductPage(props) {
 
       const createAuction = () => {     
         const price = window.web3.toWei(MyAuctionValues.price, 'ether')
-        MyAuctionValues.contractInstance.createAuction(Config.MYNFT_CA, MyNFTValues.tokenId, MyAuctionValues.auctionTitle, price, {from: MyNFTValues.account, gas: Config.GAS_AMOUNT}, (error, transactionHash) => {     
+        MyAuctionValues.contractInstance.createAuction(Config.MYNFT_CA, MyNFTValues.tokenId, MyAuctionValues.auctionTitle, price, MyAccount,{from: MyNFTValues.account, gas: Config.GAS_AMOUNT}, (error, transactionHash) => {     
             // txhash값은 메타의 이거래의 트랜잭션 아이디  
             console.log("txhash",transactionHash)    
               console.log("auc_info",MyNFTValues.tokenId, MyAuctionValues.auctionTitle, price )
