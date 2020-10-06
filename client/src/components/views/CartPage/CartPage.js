@@ -126,12 +126,14 @@ function CartPage(props) {
             console.log("balance", result)
         })
     }
-
+    const getaddr=()=>{
+        MyAuctionValues.contractInstance.getaddr({}, (err, result)=>{
+            console.log("addr",result)
+        })
+    }
     const getAuctionsOf =()=>{
-        let auctionIds = []
-        MyAuctionValues.contractInstance.getAuctionsOf(MyAuctionValues.meta_addr, {from: MyAuctionValues.meta_addr, gas: Config.GAS_AMOUNT},(error, result) => {
-            auctionIds = result
-            console.log("auctionids = ", auctionIds)
+        MyAuctionValues.contractInstance.getAuctionsOf(MyAuctionValues.meta_addr, (error, result) => {
+            console.log("auctionids = ", result)
         })
     }
 
@@ -144,8 +146,12 @@ function CartPage(props) {
 
     const getCount = () =>{
         MyAuctionValues.contractInstance.getCount({}, (error, result) =>{
-            var count = result
-            console.log("getcount", count)
+            console.log("getcount", result)
+        })
+    }
+    const getAuctionsCountOfOwner = ()=>{
+        MyAuctionValues.contractInstance.getAuctionsCountOfOwner(MyAuctionValues.meta_addr, (error, result)=>{
+            console.log("getAuctionsCountOfOwner",result)
         })
     }
 
@@ -155,7 +161,7 @@ function CartPage(props) {
             console.log("to", too)
             console.log("price",Total)
             get_auc_id()
-            
+
             MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: MyAuctionValues.meta_addr, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(Total), 'ether')}, (error, result) => {
                  console.log(result)
              })
@@ -235,6 +241,12 @@ function CartPage(props) {
                     구매
                 </button>
 
+                <button type="button" onClick={buyAuction}>채연</button>
+                <button type="button" onClick={getAuctionsCountOfOwner}>getAuctionsCountOfOwner</button>
+                <button type="button" onClick={getCount}>getCount</button>
+                <button type="button" onClick={getAuctionById}>getAuctionById</button>
+                
+
                 
                 <button type="button" onClick={sayHello}>채연1</button>
                 <button type="button" onClick={finalizeAuction}>finalizeAuction</button>
@@ -243,7 +255,7 @@ function CartPage(props) {
                 <div class="modal fade" tabindex="-1" role="dialog" id="buyModal">
                     <div class="modal-content">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onClick={getAuctionById}>구매테스트</button>
+                        <button type="button" class="btn btn-primary" onClick={finalizeAuction}>finalizeAuction</button>
                     </div>
                     </div>
                 </div>
