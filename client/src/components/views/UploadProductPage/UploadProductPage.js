@@ -27,115 +27,137 @@ const Continents = [
 
 function UploadProductPage(props) {
 
-    const [MyNFTValues, setMyNFTValues] = useState({ account: '', contractInstance: '',tokenId: '',isRegistered: false})
-    const [MyAuctionValues, setMyAuctionValues] = useState({ auctionTitle: '', contractInstance: '', price: ''})
+    const [MyNFTValues, setMyNFTValues] = useState({ account: '', contractInstance: '', tokenId: '', isRegistered: false })
+    const [MyAuctionValues, setMyAuctionValues] = useState({ auctionTitle: '', contractInstance: '', price: '' })
 
     // const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545/')); // 가나슈 서버 포트
     // var myaccount = window.web3.eth.accounts[0];
 
     const web3 = new Web3(window.web3.currentProvider);
-    const [MyAccount, setMyAccount]  =  useState("")
+    const [MyAccount, setMyAccount] = useState("")
 
-    const setAddress = () =>{
-        web3.eth.getAccounts(function(error, accounts) {
-            if(error) {
-                 console.log('error');
-             }
-             setMyAccount(accounts[0])
-     })
+    const setAddress = () => {
+        web3.eth.getAccounts(function (error, accounts) {
+            if (error) {
+                console.log('error');
+            }
+            setMyAccount(accounts[0])
+        })
     }
-   
-    
+
+
     const getRandomInt = (min, max) => {
         return Math.floor(Math.random() * (max - min + 1)) + min
     }
 
     useEffect(() => {
         setAddress()
-      },[]);
+    }, []);
 
     useEffect(() => {
         // var web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545/')); // 가나슈 서버 포트
-        setMyNFTValues({account : MyAccount, contractInstance: window.web3.eth.contract(Config.MYNFT_ABI).at(Config.MYNFT_CA),tokenId : getRandomInt(123456789,999999999)});
-        setMyAuctionValues({contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA)});
-    },[MyAccount]);
+        setMyNFTValues({ account: MyAccount, contractInstance: window.web3.eth.contract(Config.MYNFT_ABI).at(Config.MYNFT_CA), tokenId: getRandomInt(123456789, 999999999) });
+        setMyAuctionValues({ contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA) });
+    }, [MyAccount]);
 
     console.log(MyNFTValues)
 
-    const uploadProduct = (variables) =>{
+    const uploadProduct = (variables) => {
         Axios.post('/api/product/uploadProduct', variables)
-              .then(response => {
-                  if (response.data.success) {
-                      Axios.post('/api/users/updateUserUploadInfo', {"productId":response.data.productId}) //내가추가
-                      .then(response => {
-                          if (response.data.success) {
-                                  alert('Product Successfully Uploaded')
-                                      props.history.push('/')
-                                  } else {
-                                      alert('Failed to upload Product')
-                                  }
-                              })
-                  } else {
-                      alert('Failed to upload Product')
-                  }
-              })
+            .then(response => {
+                if (response.data.success) {
+                    Axios.post('/api/users/updateUserUploadInfo', { "productId": response.data.productId }) //내가추가
+                        .then(response => {
+                            if (response.data.success) {
+                                alert('Product Successfully Uploaded')
+                                props.history.push('/')
+                            } else {
+                                alert('Failed to upload Product')
+                            }
+                        })
+                } else {
+                    alert('Failed to upload Product')
+                }
+            })
     }
 
 
 
-    const getCurrentBlock= () => {
-        return new Promise((resolve, reject ) => {
+    const getCurrentBlock = () => {
+        return new Promise((resolve, reject) => {
             window.web3.eth.getBlockNumber((err, blocknumber) => {
-              if(!err) resolve(blocknumber)
-              reject(err)
-          })
+                if (!err) resolve(blocknumber)
+                reject(err)
+            })
         })
-      }
+    }
 
-
-      const watchTokenRegistered = (cb) => {
+    const watchTokenRegistered = (variables) => {
         const currentBlock = getCurrentBlock()
-        const eventWatcher = MyNFTValues.contractInstance.TokenRegistered({}, {fromBlock: currentBlock - 1, toBlock: 'latest'})
-        eventWatcher.watch(cb)
-        alert("Token registered...!")
-        MyNFTValues.isRegistered = true
+        const eventWatcher = MyNFTValues.contractInstance.TokenRegistered({}, { fromBlock: currentBlock - 1, toBlock: 'latest' })
+        // eventWatcher.watch(cb)
+
+        console.log((JSON.stringify(eventWatcher)))
+
+        if (eventWatcher) {
+
+            alert("Token registered...!")
+            MyNFTValues.isRegistered = true
+            transferToCA(variables)
+
+        }
+
         console.log(MyNFTValues)
-      }
+    }
 
-      const watchCreated = (cb) => {
+    const watchCreated = (variables) => {
         const currentBlock = getCurrentBlock()
-        const eventWatcher = MyAuctionValues.contractInstance.AuctionCreated({}, {fromBlock: currentBlock - 1, toBlock: 'latest'})
-        eventWatcher.watch(cb)
-        alert("Creation completed...!")
-        //uploadProduct(variables)
-      }
+        const eventWatcher = MyAuctionValues.contractInstance.AuctionCreated({}, { fromBlock: currentBlock - 1, toBlock: 'latest' })
+        // eventWatcher.watch(cb)
+
+        if (eventWatcher) {
+            alert("Creation completed...!")
+            uploadProduct(variables)
+        }
+    }
 
 
-      const createAuction = () => {     
+    const createAuction = (variables) => {
         const price = window.web3.toWei(MyAuctionValues.price, 'ether')
-        MyAuctionValues.contractInstance.createAuction(Config.MYNFT_CA, MyNFTValues.tokenId, MyAuctionValues.auctionTitle, price, {from: MyNFTValues.account, gas: Config.GAS_AMOUNT}, (error, transactionHash) => {     
-              console.log("txhash",transactionHash)    
-              console.log("auc_info",MyNFTValues.tokenId, MyAuctionValues.auctionTitle, price )
-              watchCreated(transactionHash)
-          })
-      }
-      const transferToCA=()=>{
-          MyNFTValues.contractInstance.transferFrom(MyNFTValues.account, Config.AUCTIONS_CA, MyNFTValues.tokenId,{
-              from: MyNFTValues.account,
-              gas: Config.GAS_AMOUNT
-          },(err, result)=>{
-              console.log("result", result)
-          })
-          watchTransfered((err, result) => {
-              if(!err) alert("token transgered to CA!")
-          })
-      }
+        MyAuctionValues.contractInstance.createAuction(Config.MYNFT_CA, MyNFTValues.tokenId, MyAuctionValues.auctionTitle, price, { from: MyNFTValues.account, gas: Config.GAS_AMOUNT }, (error, transactionHash) => {
+            if (error) {
+                alert("트랜잭션을 거부하였습니다. 다시 시도해 주십시오.")
+            } else {
+                console.log("txhash", transactionHash)
+                console.log("auc_info", MyNFTValues.tokenId, MyAuctionValues.auctionTitle, price)
+                watchCreated(variables)
+            }
+        })
+    }
 
-    const watchTransfered =(cb)=>{
-        const currentBlock =  getCurrentBlock()
+    const watchTransfered = (variables) => {
+        const currentBlock = getCurrentBlock()
         const eventWatcher = MyNFTValues.contractInstance.Transfer({},
-            {from: currentBlock-1, toBlock: 'latest'})
-            eventWatcher.watch(cb)
+            { from: currentBlock - 1, toBlock: 'latest' })
+        // eventWatcher.watch(cb)
+        if (eventWatcher) {
+            alert("token transgered to CA!")
+            createAuction(variables)
+        }
+    }
+
+    const transferToCA = (variables) => {
+        MyNFTValues.contractInstance.transferFrom(MyNFTValues.account, Config.AUCTIONS_CA, MyNFTValues.tokenId, {
+            from: MyNFTValues.account,
+            gas: Config.GAS_AMOUNT
+        }, (error, result) => {
+            if (error) {
+                alert("트랜잭션을 거부하였습니다. 다시 시도해 주십시오.")
+            } else {
+                console.log("result", result)
+                watchTransfered(variables)
+            }
+        })
     }
 
     const onSubmit = (event) => {
@@ -146,28 +168,27 @@ function UploadProductPage(props) {
         }
 
         const variables = {
-            tokenId : MyNFTValues.tokenId,
+            tokenId: MyNFTValues.tokenId,
             writer: props.user.userData._id,
             title: TitleValue,
             description: DescriptionValue,
             price: PriceValue,
             images: Images,
             continents: ContinentValue,
-            active : true
+            active: true
         }
         console.log(MyNFTValues)
 
         MyNFTValues.contractInstance.registerUniqueToken(MyNFTValues.account, MyNFTValues.tokenId, {
             from: MyNFTValues.account,
             gas: Config.GAS_AMOUNT
-          }, (error, result) => {
-            console.log("result",result)   
-
-            watchTokenRegistered(result)
-            uploadProduct(variables)
-            transferToCA()
-            createAuction()
-
+        }, (error, result) => {
+            if (error) {
+                alert("트랜잭션을 거부하였습니다. 다시 시도해 주십시오.")
+            } else {
+                console.log("result", result)
+                watchTokenRegistered(variables)
+            }
         })
     }
 
@@ -203,11 +224,11 @@ function UploadProductPage(props) {
         setImages(newImages)
     }
 
-        //------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     useEffect(() => {
-        setMyAuctionValues({auctionTitle: TitleValue, contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA) , price: PriceValue});
-    },[TitleValue,PriceValue]);
+        setMyAuctionValues({ auctionTitle: TitleValue, contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA), price: PriceValue });
+    }, [TitleValue, PriceValue]);
 
 
 
@@ -221,7 +242,7 @@ function UploadProductPage(props) {
             <Form onSubmit={onSubmit}>
 
                 {/* DropZone */}
-                <FileUpload refreshFunction={updateImages} style={{ textAlign: 'center'}}/>
+                <FileUpload refreshFunction={updateImages} style={{ textAlign: 'center' }} />
 
                 <br />
                 <br />
