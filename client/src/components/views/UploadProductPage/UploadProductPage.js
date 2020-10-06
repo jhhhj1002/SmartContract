@@ -157,18 +157,6 @@ function UploadProductPage(props) {
         })
     }
 
-    const watchTransfered = (variables) => {
-        const currentBlock = getCurrentBlock()
-
-        const eventWatcher = MyNFTValues.contractInstance.Transfer({},
-            { from: currentBlock - 1, toBlock: 'latest' })
-        // eventWatcher.watch(cb)
-        if (eventWatcher) {
-            alert("token transgered to CA!")
-            createAuction(variables)
-        }
-    }
-
     const transferToCA = (variables) => {
         MyNFTValues.contractInstance.transferFrom(MyNFTValues.account, Config.AUCTIONS_CA, MyNFTValues.tokenId, {
             from: MyNFTValues.account,
