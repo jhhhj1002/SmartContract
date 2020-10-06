@@ -59,30 +59,35 @@ contract Auctions {
 		return true;
 	}
 
-	function finalizeAuction(uint _auctionId, address _to) public payable {
-		//auction을 소유자에게 전달하는 함수
+	// function finalizeAuction(uint _auctionId, address _to) public payable {
+	// 	//auction을 소유자에게 전달하는 함수
+	// 	Auction memory myAuction = auctions[_auctionId];
+	// 	if(approveAndTransfer(address(this), _to, myAuction.repoAddress, myAuction.tokenId)){
+	// 		//받는 어드레스에 소유권이 승인되고 전달되는 함수, 여기가 완료되면 해당 옥션의 상태가 종료로 바뀜
+	// 		//그 다음 auctionfinalized 이벤트를 송출함
+	// 	    auctions[_auctionId].active = false;
+	// 	    auctions[_auctionId].finalized = true;
+
+	// 		require(auctions[_auctionId].finalized, "success");
+	// 	    emit AuctionFinalized(msg.sender, _auctionId);
+			
+	// 	}
+
+	function finalizeAuction(uint _auctionId, address _to) public {
 		Auction memory myAuction = auctions[_auctionId];
 		if(approveAndTransfer(address(this), _to, myAuction.repoAddress, myAuction.tokenId)){
-			//받는 어드레스에 소유권이 승인되고 전달되는 함수, 여기가 완료되면 해당 옥션의 상태가 종료로 바뀜
-			//그 다음 auctionfinalized 이벤트를 송출함
 		    auctions[_auctionId].active = false;
 		    auctions[_auctionId].finalized = true;
-
 			require(auctions[_auctionId].finalized, "success");
 		    emit AuctionFinalized(msg.sender, _auctionId);
-			
 		}
-		
+	}
 
-		
-		
-		
-		
 		//buyAuction();
 		//emit AuctionPayed(msg.sender, myAuction.owner, myAuction.price);
 		//옥션 소유자를 구매자 주소로 넣음
 		//auctions[_auctionId].owner = msg.sender;
-	}
+	// }
 
 //***************************** 채연 테스트 함수 */
 
