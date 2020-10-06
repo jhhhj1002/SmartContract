@@ -124,28 +124,6 @@ function UploadProductPage(props) {
 
     const createAuction = (variables) => {
         const price = window.web3.toWei(MyAuctionValues.price, 'ether')
-        MyAuctionValues.contractInstance.createAuction(Config.MYNFT_CA, MyNFTValues.tokenId, MyAuctionValues.auctionTitle, price, MyAccount,{from: MyNFTValues.account, gas: Config.GAS_AMOUNT}, (error, transactionHash) => {     
-            // txhash값은 메타의 이거래의 트랜잭션 아이디  
-            console.log("txhash",transactionHash)    
-              console.log("auc_info",MyNFTValues.tokenId, MyAuctionValues.auctionTitle, price )
-              watchCreated(transactionHash)
-          })
-      }
-      const transferToCA=()=>{
-          MyNFTValues.contractInstance.transferFrom(MyNFTValues.account, Config.AUCTIONS_CA, MyNFTValues.tokenId,{
-              from: MyNFTValues.account,
-              gas: Config.GAS_AMOUNT
-          },(err, result)=>{
-              //result값은 메타의 이거래의 트랜잭션 아이디  
-              console.log("result", result)
-          })
-          watchTransfered((err, result) => {
-              if(!err) alert("token transgered to CA!")
-          })
-      }
-
-    const watchTransfered =(cb)=>{
-        const currentBlock =  getCurrentBlock()
         MyAuctionValues.contractInstance.createAuction(Config.MYNFT_CA, MyNFTValues.tokenId, MyAuctionValues.auctionTitle, price, { from: MyNFTValues.account, gas: Config.GAS_AMOUNT }, (error, transactionHash) => {
             if (error) {
                 alert("트랜잭션을 거부하였습니다. 다시 시도해 주십시오.")
@@ -155,6 +133,17 @@ function UploadProductPage(props) {
                 watchCreated(variables)
             }
         })
+    }
+
+    const watchTransfered = (variables) => {
+        const currentBlock = getCurrentBlock()
+        const eventWatcher = MyNFTValues.contractInstance.Transfer({},
+            { from: currentBlock - 1, toBlock: 'latest' })
+        // eventWatcher.watch(cb)
+        if (eventWatcher) {
+            alert("token transgered to CA!")
+            createAuction(variables)
+        }
     }
 
     const transferToCA = (variables) => {

@@ -9,7 +9,7 @@ import UserCardBlock from './Sections/UserCardBlock';
 import { Result, Empty } from 'antd';
 import web3 from 'web3';
 import Config from '../../Config';
-
+import Axios from 'axios';
 
 //import Paypal from '../../utils/Paypal';
 
@@ -24,7 +24,7 @@ function CartPage(props) {
     //https://web3js.readthedocs.io/en/v1.2.0/web3-eth.html 여기서 web3함수랑 초기설정있음!
     const [MyAuctionValues, setMyAuctionValues] = useState({ contractInstance: '', productId: '', from: '', to: '', productPrice: '', tokenid:'', meta_addr:''})
     let auc_id=[];
-
+    let prod_id=[];
 
     const [MyAccount, setMyAccount]  =  useState("")
 
@@ -71,6 +71,12 @@ function CartPage(props) {
                 }
             }
             console.log("arr", auc_id)
+        }
+    }
+    const get_prod_id=()=>{
+        for(let i =0;i<props.user.userData.cart.length;i++){
+            console.log("len ", props.user.userData.cart.length )
+            prod_id.push(props.user.cartDetail[i]._id)
         }
     }
 
@@ -153,6 +159,27 @@ function CartPage(props) {
         MyAuctionValues.contractInstance.getAuctionsCountOfOwner(MyAuctionValues.meta_addr, (error, result)=>{
             console.log("getAuctionsCountOfOwner",result)
         })
+    }
+    
+    const editActive = () => {
+        get_prod_id()
+        const variables = {
+            id: prod_id[0],
+            bol : false
+        }
+        console.log(prod_id[0])
+        Axios.post('/api/product/editActive', variables)
+        .then(response => {
+            if (response.data.success) {
+                alert('Activate Successfully Edited')
+    
+            } else {
+                alert('Failed to Edit Activate')
+            }
+        })
+    }
+    const test = () =>{
+        editActive()
     }
 
     var price = Total
@@ -241,7 +268,6 @@ function CartPage(props) {
                     구매
                 </button>
 
-                <button type="button" onClick={buyAuction}>채연</button>
                 <button type="button" onClick={getAuctionsCountOfOwner}>getAuctionsCountOfOwner</button>
                 <button type="button" onClick={getCount}>getCount</button>
                 <button type="button" onClick={getAuctionById}>getAuctionById</button>
@@ -249,7 +275,7 @@ function CartPage(props) {
 
                 
                 <button type="button" onClick={sayHello}>채연1</button>
-                <button type="button" onClick={finalizeAuction}>finalizeAuction</button>
+                <button type="button" onClick={test}>edittest</button>
                 <button type="button" onClick={getAuctionById}>현경</button>
 
                 <div class="modal fade" tabindex="-1" role="dialog" id="buyModal">
