@@ -157,7 +157,7 @@ function CartPage(props) {
             
            
             
-            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: account, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(price), 'ether')}, (error, result) => {
+            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: MyAuctionValues.meta_addr, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(price), 'ether')}, (error, result) => {
                  console.log(result)
              })
             
@@ -253,7 +253,7 @@ function CartPage(props) {
                     구매
                 </button>
 
-                <button type="button" onClick={buyAuction}>채연</button>
+                <button type="button" onClick={finalizeAuction}>채연</button>
                 <button type="button" onClick={getAuctionById}>현경</button>
 
                 <div class="modal fade" tabindex="-1" role="dialog" id="buyModal">
