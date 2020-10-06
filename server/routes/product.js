@@ -176,6 +176,18 @@ router.post("/editProduct", auth, (req, res) => {
     })
 });
 
+router.post("/editActive", auth, (req, res)=>{
+    console.log("editActivate안 ", req.body)
+    console.log("activate pro_id ",req.body.id)
+    Product.findOneAndUpdate({_id: req.body.id},{
+        active: req.body.bol,
+    },{ new: true }).then(function () {
+        console.log("product edited");
+    }).catch(function (error) {
+        console.log(error);
+    })
+})
+
 /*Mypage.js item 리무브*/
 router.get("/deleteItem", auth, (req, res) => {
     console.log("/deleteItem req.query", req.query)
