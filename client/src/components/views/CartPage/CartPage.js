@@ -7,9 +7,11 @@ import {
 } from '../../../_actions/user_actions';
 import UserCardBlock from './Sections/UserCardBlock';
 import { Result, Empty } from 'antd';
-import web3 from 'web3';
 import Config from '../../Config';
+
+import Web3 from 'web3';
 import Axios from 'axios';
+
 
 //import Paypal from '../../utils/Paypal';
 
@@ -20,7 +22,8 @@ function CartPage(props) {
     const [Total, setTotal] = useState(0)
     const [ShowTotal, setShowTotal] = useState(false)
     const [ShowSuccess, setShowSuccess] = useState(false)
-    var Web3 = new web3(web3.givenProvider || 'ws://some.local-or-remote.node:8546')
+    // var Web3 = new web3(web3.givenProvider || 'ws://some.local-or-remote.node:8546')
+    const web3 = new Web3(window.web3.currentProvider);
     //https://web3js.readthedocs.io/en/v1.2.0/web3-eth.html 여기서 web3함수랑 초기설정있음!
     const [MyAuctionValues, setMyAuctionValues] = useState({ contractInstance: '', productId: '', from: '', to: '', productPrice: '', tokenid:'', meta_addr:''})
     let auc_id=[];
@@ -29,7 +32,7 @@ function CartPage(props) {
     const [MyAccount, setMyAccount]  =  useState("")
 
     const setAddress = () =>{
-        Web3.eth.getAccounts(function(error, accounts) {
+        web3.eth.getAccounts(function(error, accounts) {
             if(error) {
                  console.log('error');
              }
@@ -37,10 +40,13 @@ function CartPage(props) {
      })
     }
    
+    useEffect(() => {
+        setAddress()
+    }, []);
+
 
 
     useEffect(() => {
-        setAddress()
         setMyAuctionValues({contractInstance: window.web3.eth.contract(Config.AUCTIONS_ABI).at(Config.AUCTIONS_CA), meta_addr : MyAccount});
 
       let cartItems = [];
@@ -58,7 +64,7 @@ function CartPage(props) {
             }
         }
 
-    }, [props.user.userData])
+    }, [props.user.userData,MyAccount])
 /////////// 옥션 아이디 가져오는 함수
     const get_auc_id = () =>{
         for(let i =0;i<props.user.userData.cart.length;i++){
@@ -183,17 +189,40 @@ function CartPage(props) {
     }
 
     var price = Total
+    console.log(web3.eth)
+ 
+  
     const finalizeAuction = (data) =>{
-            var too= props.user.cartDetail[0].writer.wallet
+        console.log(MyAuctionValues.meta_addr)
+        console.log(props.user.cartDetail[0].writer.wallet)
+            const too= props.user.cartDetail[0].writer.wallet
+            console.log("w3", web3)
             console.log("to", too)
             console.log("price",Total)
             get_auc_id()
 
-            MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: MyAuctionValues.meta_addr, gas: Config.GAS_AMOUNT, value:Web3.utils.toWei(String(Total), 'ether')}, (error, result) => {
-                 console.log(result)
-             })
+            const sendarr = String(MyAuctionValues.meta_addr)
+            console.log("확인" + sendarr)
+            const recarr = String(props.user.cartDetail[0].writer.wallet)
             
-             transactionSuccess(data)
+            web3.eth.sendTransaction({
+                from: sendarr,
+                to: recarr, 
+                value: web3._extend.utils.toWei(String(Total), 'ether'), 
+            }, function(err, transactionHash) {
+                if (err) { 
+                    console.log(err); 
+                } else {
+
+                    console.log(transactionHash);
+                    MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: MyAuctionValues.meta_addr, gas: Config.GAS_AMOUNT}, (error, result) => {
+                        console.log(result)
+        
+                    })
+                    
+                     transactionSuccess(data)
+                }
+            });
       
     }
 
