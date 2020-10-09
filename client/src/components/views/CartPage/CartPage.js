@@ -221,21 +221,12 @@ function CartPage(props) {
                     })
                     
                      transactionSuccess(data)
+                     editActive()
                 }
             });
       
     }
 
-    //   var price = Total
-      const sayHello = function(){ 
-
-        console.log("가격", Total)
-
-
-      };
-
-
-// >>>>>>> 30c425c5a9f2664f20d12afd488ad10f44c585a6
 
     return (
         <div style={{ width: '85%', margin: '3rem auto' }}>
@@ -290,27 +281,27 @@ function CartPage(props) {
 
 
 
-                <button class="btn btn-info btn-buy"
+                {/* <button class="btn btn-info btn-buy"
                     type="button"
                     data-toggle="modal"
                     data-target="#buyModal">
                     구매
-                </button>
+                </button> */}
 
-                <button type="button" onClick={getAuctionsCountOfOwner}>getAuctionsCountOfOwner</button>
+                {/* <button type="button" onClick={getAuctionsCountOfOwner}>getAuctionsCountOfOwner</button>
                 <button type="button" onClick={getCount}>getCount</button>
-                <button type="button" onClick={getAuctionById}>getAuctionById</button>
+                <button type="button" onClick={getAuctionById}>getAuctionById</button> */}
                 
 
                 
-                <button type="button" onClick={sayHello}>채연1</button>
+                {/* <button type="button" onClick={sayHello}>채연1</button>
                 <button type="button" onClick={test}>edittest</button>
-                <button type="button" onClick={getAuctionById}>현경</button>
+                <button type="button" onClick={getAuctionById}>현경</button> */}
 
                 <div class="modal fade" tabindex="-1" role="dialog" id="buyModal">
                     <div class="modal-content">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onClick={finalizeAuction}>finalizeAuction</button>
+                        <button type="button" class="btn btn-primary" onClick={finalizeAuction}>구매</button>
                     </div>
                     </div>
                 </div>
