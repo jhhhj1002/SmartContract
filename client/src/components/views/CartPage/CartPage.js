@@ -215,7 +215,9 @@ function CartPage(props) {
                 } else {
 
                     console.log(transactionHash);
-                    MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, {from: MyAuctionValues.meta_addr, gas: Config.GAS_AMOUNT}, (error, result) => {
+                    MyAuctionValues.contractInstance.finalizeAuction( auc_id[0], too, 
+                                                            {from: MyAuctionValues.meta_addr, gas: Config.GAS_AMOUNT},
+                                                            (error, result) => {
                         console.log(result)
         
                     })
