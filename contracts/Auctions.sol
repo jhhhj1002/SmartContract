@@ -83,25 +83,15 @@ contract Auctions {
 		}
 	}
 
-		//buyAuction();
-		//emit AuctionPayed(msg.sender, myAuction.owner, myAuction.price);
-		//옥션 소유자를 구매자 주소로 넣음
-		//auctions[_auctionId].owner = msg.sender;
-	// }
 
-
-
-
-
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
+	// myNFT 컨트랙트에  컨트랙트 address를 넣고, 인스턴스를 가져온 후, 
+	// 인스턴스의 approve(_to, _tokenId)를 통해 해당 토큰을 받는 어드레스(_to)를 승인
 	function approveAndTransfer(address _from, address _to, address _repoAddress, uint256 _tokenId) internal returns(bool)  {
 		// internal 함수, 컨트랙트 내부에서만 호출 가능
 		MyNFT remoteContract = MyNFT(_repoAddress);
-		// myNFT 컨트랙트에  컨트랙트 address를 넣고, 인스턴스를 가져온 후, 인스턴스의 approve(_to, _tokenId)를 통해 해당 토큰을 받는 어드레스(_to)를 승인
 		// transferFrom을 통해 해당 어드레스로 전송한다.
 		remoteContract.approve(_to, _tokenId);
 		remoteContract.transferFrom(_from, _to, _tokenId);
-		//remoteContract.transferFrom(_from, _to, _price);
 		return true;
 	}
 
