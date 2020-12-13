@@ -141,7 +141,7 @@ function UploadProductPage(props) {
             { from: currentBlock - 1, toBlock: 'latest' })
         // eventWatcher.watch(cb)
         if (eventWatcher) {
-            alert("token transgered to CA!")
+            alert("token transfered to CA!")
             createAuction(variables)
         }
     }
